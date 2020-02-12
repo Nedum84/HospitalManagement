@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true"
+        android:padding="10dp"
+        android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/payment_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADSU final year Library Clearance payment"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:textColor="#777"
+            />
+        <TextView
+            android:id="@+id/clearance_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="NGN 1000.00"
+            android:textStyle="bold"
+            android:textColor="#42AC5D"
+            android:textColorHint="#c4c4c4"
+            tools:ignore="Autofill" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#bdbdbd"
+            android:layout_marginBottom="12dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@drawable/design_border_radius_grey"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CARD NUMBER"
+                android:textAllCaps="true"
+                android:textColor="#777"
+                android:textColorHint="#c4c4c4"
+                tools:ignore="Autofill" />
+            <EditText
+                android:id="@+id/edit_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawablePadding="5dp"
+                android:inputType="number"
+                android:maxLength="19"
+                android:textSize="16sp"
+                android:hint="0000 0000 0000 0000"
+                android:textColor="#777"
+                android:textColorHint="#c4c4c4"
+                tools:ignore="Autofill" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+            tools:ignore="DisableBaselineAlignment">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/design_border_radius_grey"
+                android:orientation="vertical"
+                android:layout_marginRight="12dp"
+                android:layout_marginEnd="12dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Valid till"
+                    android:textAllCaps="true"
+                    android:textColor="#777"
+
+                    android:textColorHint="#c4c4c4"
+                    tools:ignore="Autofill" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/edit_expiry_month"
+                        android:layout_width="35dp"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:drawablePadding="5dp"
+                        android:inputType="number"
+                        android:maxLength="2"
+                        android:textSize="16sp"
+                        android:hint="MM"
+                        android:textColor="#777"
+                        android:textColorHint="#c4c4c4"
+                        tools:ignore="Autofill" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/ "
+                        android:textAllCaps="true"
+                        android:textColor="#777"
+                        android:textColorHint="#c4c4c4"
+                        tools:ignore="Autofill" />
+                    <EditText
+                        android:id="@+id/edit_expiry_year"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:drawablePadding="5dp"
+                        android:inputType="number"
+                        android:maxLength="2"
+                        android:textSize="16sp"
+                        android:hint="YY"
+                        android:layout_weight="2"
+                        android:textColor="#777"
+                        android:textColorHint="#c4c4c4"
+                        tools:ignore="Autofill" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/design_border_radius_grey"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CVV"
+                        android:textAllCaps="true"
+                        android:textColor="#777"
+                        android:textColorHint="#c4c4c4"
+                        tools:ignore="Autofill"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:id="@+id/cvv_help"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HELP?"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary"
+                        tools:ignore="Autofill" />
+
+                </LinearLayout>
+                <EditText
+                    android:id="@+id/edit_cvc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:drawablePadding="5dp"
+                    android:hint="123"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:textSize="16sp"
+                    android:textColor="#777"
+                    android:textColorHint="#c4c4c4"
+                    tools:ignore="Autofill" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.github.florent37.shapeofview.shapes.CutCornerView
+            android:id="@+id/button_perform_local_transaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shape_cutCorner_bottomLeftSize="3dp"
+            app:shape_cutCorner_topLeftSize="3dp"
+            app:shape_cutCorner_topRightSize="3dp"
+            app:shape_cutCorner_bottomRightSize="3dp"
+            android:layout_marginTop="8dp">
+            <TextView
+                android:id="@+id/clearance_fee2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pay NGN 1000"
+                android:gravity="center_horizontal"
+                android:textColor="#FFFFFF"
+                android:background="#2CBD4E"
+                android:textStyle="bold"
+                android:padding="16dp"/>
+
+        </com.github.florent37.shapeofview.shapes.CutCornerView>
+        <ImageView
+            android:layout_marginTop="20dp"
+            android:layout_width="180dp"
+            android:layout_height="80dp"
+            app:srcCompat="@drawable/secured_by_paystack"
+            tools:ignore="ContentDescription"
+            />
+
+
+    </LinearLayout>
+</ScrollView>

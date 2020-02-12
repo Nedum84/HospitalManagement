@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/design_with_shadow"
+    android:layout_margin="12dp"
+    android:padding="8dp">
+
+    <ImageView
+        android:layout_width="130dp"
+        android:layout_height="160dp"
+        android:padding="3dp"
+        app:srcCompat="@drawable/user"
+        tools:ignore="ContentDescription"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorDarkBlue"
+            android:text="A Nueorogugeorn with 24 years experience and very ver good in many cases"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorWhite"
+            android:padding="6dp"
+            android:gravity="center_horizontal"
+            android:background="@color/colorPrimary"
+            android:text="Set Appointment"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDarkBlue"
+            android:text="Dr. Emeka Paul Christian"/>
+    </LinearLayout>
+
+</LinearLayout>
