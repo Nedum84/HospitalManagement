@@ -3,25 +3,33 @@ package com.hospitalmanagement
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import androidx.fragment.app.DialogFragment
+import com.android.volley.AuthFailureError
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
 import kotlinx.android.synthetic.main.fragment_dialog_make_app.*
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.HashMap
 
 
 class FragmentDialogMakeApp : DialogFragment() {
-    var listener: FragmentDialogMyAppsInteractionListener? = null
     lateinit var thisContext: Activity
+
+    var specialityId = ""
+    var doctorId = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -35,44 +43,144 @@ class FragmentDialogMakeApp : DialogFragment() {
         closeDialogFrag.setOnClickListener {
             dialog!!.dismiss()
         }
+        addAppointmentBtn.setOnClickListener {
+            processAppointment()
+        }
+
+        docSpecialitySpinnerInitialize()
     }
 
 
-    fun topicSpinnerInitialize(subject_id:Int){
-        val topicList = sqLiteDBHelper.getTopics(-1,subject_id)
-        val topicNameArray = arrayListOf<String>()
-        val topicIdArray = arrayListOf<String>()
+    private fun toString(editText: EditText):String{
+        return editText.text.toString().trim()
+    }
+    private fun checkEmpty(string: String):Boolean{
+        return string.isEmpty()
+    }
+    private fun processAppointment() {
+        val addAppDate = toString(addAppDate)
+        val addAppSymptoms = toString(addAppSymptoms)
 
-        topicNameArray.add("Select Topic...")
-        topicIdArray.add("-1")
-        topicNameArray.add("All")
-        topicIdArray.add("-1")
-        for (element in topicList) {
-            topicNameArray.add(element.topic_name!!)
-            topicIdArray.add(element.topic_id!!)
+
+
+        if(checkEmpty(specialityId)){
+            ClassAlertDialog(thisContext).toast("Select speciality...")
+        }else if(checkEmpty(doctorId)){
+            ClassAlertDialog(thisContext).toast("Select doctor...")
+        }else if(checkEmpty(addAppDate)){
+            ClassAlertDialog(thisContext).toast("Enter the date")
+        }else if(checkEmpty(addAppSymptoms)){
+            ClassAlertDialog(thisContext).toast("Enter the symptoms...")
+        }else{
+
+            //creating volley string request
+            val pDialog= ClassProgressDialog(context)
+            pDialog.createDialog()
+            val stringRequest = object : StringRequest(Request.Method.POST, UrlHolder.URL_ADD_APP,
+                    Response.Listener<String> { response ->
+                        pDialog.dismissDialog()
+
+                        try {
+
+                            val obj = JSONObject(response)
+                            val regStatus = obj.getString("app_status");
+                            if (regStatus == "ok") {
+                                ClassAlertDialog(thisContext).toast("Appointment submitted successfully...")
+
+                                dialog!!.dismiss()
+                            } else {
+                                ClassAlertDialog(thisContext).toast(regStatus)
+                            }
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                    },
+                    Response.ErrorListener { volleyError ->
+                        pDialog.dismissDialog()
+                        ClassAlertDialog(thisContext).toast("ERROR IN NETWORK CONNECTION!")
+                    }) {
+                @Throws(AuthFailureError::class)
+                override fun getParams(): Map<String, String> {
+                    val params = HashMap<String, String>()
+                    params["request_type"] = "add_app"
+                    params["app_date"] = addAppDate
+                    params["pat_id"] = ClassSharedPreferences(thisContext).getUserId()!!
+                    params["pat_symptoms"] = addAppSymptoms
+                    params["doc_id"] = doctorId
+                    return params
+                }
+            }
+
+            //adding request to queue
+            VolleySingleton.instance?.addToRequestQueue(stringRequest)
+            //volley interactions end
         }
-        val topicSpinnerArrayAdapter = ArrayAdapter<String>(thisContext, android.R.layout.simple_spinner_dropdown_item, topicNameArray)
+    }
+
+
+
+    private fun docSpecialitySpinnerInitialize() {
+        val docList = ClassUtilities().getDoctors(thisContext).distinctBy { it.speciality_id }
+
+        val docSpecialityNameArray = arrayListOf<String>()
+        val docSpecialityIdArray = arrayListOf<String>()
+
+        docSpecialityNameArray.add("Select Speciality...")
+        docSpecialityIdArray.add("")
+        for (element in docList) {
+            if(element.speciality!!.isEmpty())continue
+
+            docSpecialityNameArray.add(element.speciality)
+            docSpecialityIdArray.add(element.speciality_id!!)
+        }
+        val spinnerArrayAdapter = ArrayAdapter<String>(thisContext, android.R.layout.simple_spinner_dropdown_item, docSpecialityNameArray)
         //selected item will look like a spinner set from XML
-        topicSpinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        addAppDocSpeciality?.adapter = topicSpinnerArrayAdapter
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        addAppDocSpeciality?.adapter = spinnerArrayAdapter
 
         addAppDocSpeciality?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                selectedTopicId = topicIdArray[position]
-                selectedTopicName = topicNameArray[position]
-//                showError(selectedTopicId+" - "+topicNameArray[position])
+                specialityId = docSpecialityIdArray[position]
+                doctorsSpinnerInitialize()
             }
 
         }
 
 
-        if(draftDetails.size !=0){
-            val topicIdPos = topicIdArray.indexOf(draftDetails[0].draft_topic_id)
-            topic_spin?.setSelection(topicIdPos)
+    }
+    fun doctorsSpinnerInitialize() {
+        val docList = ClassUtilities().getDoctors(thisContext, specialityId)
+
+        val docNameArray = arrayListOf<String>()
+        val docIdArray = arrayListOf<String>()
+
+        docNameArray.add("Select doctor...")
+        docIdArray.add("")
+        for (element in docList) {
+            if(element.speciality!!.isEmpty())continue
+
+            docNameArray.add(element.name!!)
+            docIdArray.add(element.user_id!!)
         }
+        val spinnerArrayAdapter = ArrayAdapter<String>(thisContext, android.R.layout.simple_spinner_dropdown_item, docNameArray)
+        //selected item will look like a spinner set from XML
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        addAppDocName?.adapter = spinnerArrayAdapter
+
+        addAppDocName?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                doctorId = docIdArray[position]
+            }
+
+        }
+
+
     }
 
 
@@ -90,9 +198,9 @@ class FragmentDialogMakeApp : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
+            setStyle(STYLE_NO_TITLE, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
         } else {
-            setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_DeviceDefault_Light_NoActionBar)
+            setStyle(STYLE_NO_TITLE, android.R.style.Theme_DeviceDefault_Light_NoActionBar)
         }
     }
 
@@ -103,26 +211,6 @@ class FragmentDialogMakeApp : DialogFragment() {
         dialog.window!!.attributes.windowAnimations = R.style.Animation_WindowSlideUpDown
 //        isCancelable = false
         return dialog
-    }
-
-
-    //Fragment communication with the Home Activity Starts
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentDialogMyAppsInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    interface FragmentDialogMyAppsInteractionListener {
-        fun onAddAppointment()
     }
     //Fragment communication with the Home Activity Stops
 }

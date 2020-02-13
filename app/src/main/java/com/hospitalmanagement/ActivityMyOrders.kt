@@ -19,7 +19,6 @@ class ActivityMyOrders : AppCompatActivity(), MyOrdersAdapter.OrdersAdapterCallb
 
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_orders)
@@ -53,13 +52,26 @@ class ActivityMyOrders : AppCompatActivity(), MyOrdersAdapter.OrdersAdapterCallb
 
         if (curDrugOrders.size!=0){
             ADAPTER.addItems(curDrugOrders)
+            updateTotalPrice(curDrugOrders)
+
 
             no_data_tag.visibility = View.GONE
+            order_footer.visibility = View.VISIBLE
         }else{
             no_data_tag.visibility = View.VISIBLE
+            order_footer.visibility = View.GONE
         }
 
     }
+
+    private fun updateTotalPrice(curDrugOrders: MutableList<DrugClassBinder>) {
+        var totalPrice = 0
+        for (p in curDrugOrders){
+            totalPrice += p.drug_price.toInt()*p.drug_qty
+        }
+        totalPriceShow.text     = "Total: ₦$totalPrice.00"
+    }
+
     override fun onOrderUpdate(drugList: MutableList<DrugClassBinder>) {
         ClassSharedPreferences(thisContext).setOrderDetails(Gson().toJson(drugList))
     }

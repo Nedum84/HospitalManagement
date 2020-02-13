@@ -127,6 +127,7 @@
                 tools:ignore="Autofill,LabelFor"/>
 
             <TextView
+                android:id="@+id/addAppointmentBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Submit Appointment"

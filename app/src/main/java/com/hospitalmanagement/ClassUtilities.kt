@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import com.google.gson.Gson
 
 
 class ClassUtilities() {
@@ -41,6 +42,24 @@ class ClassUtilities() {
             }
             activity.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         } catch (e: Exception) {}
+    }
+
+    fun getDoctors(context: Context?,speality_id:String=""):MutableList<UserClassBinder>{
+        val allUsers = (Gson().fromJson(ClassSharedPreferences(context).getAllUsersJSONDetails(), Array<UserClassBinder>::class.java).asList()).toMutableList()
+        val selUsers = mutableListOf<UserClassBinder>()
+        for (u in allUsers){
+            if (u.user_level !="3")
+                continue
+
+            if (speality_id.isNotEmpty()){
+                if (u.speciality_id !=speality_id)
+                    continue
+            }
+
+            selUsers.add(u)
+        }
+
+        return selUsers.distinct().toMutableList()
     }
 
 

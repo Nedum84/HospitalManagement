@@ -12,6 +12,7 @@ class  ClassSharedPreferences(val context: Context?){
 
 
     private val PREFERENCE_USER_JSON_DETAILS = "user_json_details"
+    private val PREFERENCE_ALL_USERS_JSON_DETAILS = "all_users_json_details"
     private val PREFERENCE_USER_LEVEL = "user_level"
     private val PREFERENCE_USER_ID = "user_id"
 
@@ -38,8 +39,17 @@ class  ClassSharedPreferences(val context: Context?){
         editor.putString(PREFERENCE_USER_JSON_DETAILS,data)
         editor.apply()
     }
-    fun getUserJSONDetails():String?{
-        return  preference.getString(PREFERENCE_USER_JSON_DETAILS,"")
+    private fun getUserJSONDetails():String?{
+        return  preference.getString(PREFERENCE_USER_JSON_DETAILS, "")//Gson().toJson(mutableListOf<UserClassBinder>())
+    }
+    //set all the users details arrays in JSON
+    fun setAllUsersJSONDetails(data:String){
+        val editor = preference.edit()
+        editor.putString(PREFERENCE_ALL_USERS_JSON_DETAILS,data)
+        editor.apply()
+    }
+    fun getAllUsersJSONDetails():String?{
+        return  preference.getString(PREFERENCE_ALL_USERS_JSON_DETAILS, Gson().toJson(mutableListOf<UserClassBinder>()))
     }
     //set set Id
     fun setUserId(data:String?){

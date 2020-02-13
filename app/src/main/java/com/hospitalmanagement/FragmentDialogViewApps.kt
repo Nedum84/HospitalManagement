@@ -56,7 +56,6 @@ class FragmentDialogViewApps: DialogFragment() {
         addAppointmentBtn.setOnClickListener {
             dialog!!.dismiss()
             listener!!.onAddAppointment()
-
         }
     }
 

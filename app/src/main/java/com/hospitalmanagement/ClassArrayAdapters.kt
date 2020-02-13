@@ -93,7 +93,7 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
             cancelApp(listDetails)
         }
         holder.appSymptomsBtn.setOnClickListener {
-            ClassAlertDialog(context).alertMessage("${listDetails.pat_symptoms}","symptoms")
+            ClassAlertDialog(context).alertMessage("${listDetails.pat_symptoms}","Symptoms")
         }
 
         holder.appViewPrescriptionBtn.setOnClickListener {
@@ -267,7 +267,7 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
         //creating volley string request
         val progressDialog = ClassProgressDialog(context)
         progressDialog.createDialog()
-        val stringRequest =  object : StringRequest(Request.Method.POST, UrlHolder.URL_CANCEL_APP,
+        val stringRequest =  object : StringRequest(Request.Method.POST, UrlHolder.URL_ADD_PRESCRIPTION,
                 Response.Listener<String> { response ->
                     progressDialog.dismissDialog()
 
@@ -549,6 +549,9 @@ class DrugsAdapter(val list:MutableList<DrugClassBinder>, val context: Context):
 
             //Updating...
             notifyDataSetChanged()
+        }
+        holder.drugWrapper.setOnClickListener {
+            ClassAlertDialog(context).alertMessage("${listDetails.drug_desc}","${listDetails.drug_name}")
         }
 
     }
