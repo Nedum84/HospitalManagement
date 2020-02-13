@@ -1,12 +1,13 @@
 package com.hospitalmanagement
 
 import android.content.Context
+import com.google.gson.Gson
 import java.util.HashSet
 
 class  ClassSharedPreferences(val context: Context?){
 
     private val PREFERENCE_NAME = "hospital_management_preference"
-//    private val PREFERENCE_CURRENT_CLEARANCE_ID = "current_clearance_id"
+    private val PREFERENCE_CURRENT_ORDER_DETAILS = "current_order_details"
 
 
 
@@ -16,14 +17,14 @@ class  ClassSharedPreferences(val context: Context?){
 
     private val preference = context?.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)!!
 
-    //set setCurrentClearanceId
-    fun setCurrentClearanceDetail(data: String){
+    //set Orders Cart Details
+    fun setOrderDetails(data: String){
         val editor = preference.edit()
-        editor.putString(PREFERENCE_CURRENT_CLEARANCE_ID,data)
+        editor.putString(PREFERENCE_CURRENT_ORDER_DETAILS,data)
         editor.apply()
     }
-    fun getCurrentClearanceDetail():String{
-        return  preference.getString(PREFERENCE_CURRENT_CLEARANCE_ID,"")!!
+    fun getOrderDetails():String{
+        return  preference.getString(PREFERENCE_CURRENT_ORDER_DETAILS, Gson().toJson(mutableListOf<DrugClassBinder>()))!!
     }
 
 

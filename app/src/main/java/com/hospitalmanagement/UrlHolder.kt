@@ -13,4 +13,6 @@ object  UrlHolder{
 
 
     val URL_GET_DRUGS: String?  = URL_ROOT + "get_drugs.php"
+    val URL_CANCEL_APP: String?  = URL_ROOT + "cancel_app.php"
+    val URL_GET_APPS: String?  = URL_ROOT + "get_apps.php"
 }

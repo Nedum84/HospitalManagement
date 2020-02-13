@@ -6,6 +6,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
@@ -13,22 +14,26 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.adapter_apps.view.*
+import kotlinx.android.synthetic.main.adapter_doctors_profile.view.*
+import kotlinx.android.synthetic.main.adapter_my_orders.view.*
+import kotlinx.android.synthetic.main.adapter_search_drugs.view.*
 import org.json.JSONException
 import org.json.JSONObject
 
 
 class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): RecyclerView.Adapter<AppsAdapter.ViewHolder>(){
-    private var adapterCallbackInterface: AppAdapterCallbackInterface? = null
+//    private var adapterCallbackInterface: AppAdapterCallbackInterface? = null
+//
+//
+//    init {
+//        try {
+//            adapterCallbackInterface = context as AppAdapterCallbackInterface
+//        } catch (e: ClassCastException) {
+//            throw RuntimeException(context.toString() + "Activity must implement AppAdapterCallbackInterface.", e)
+//        }
+//    }
 
 
-
-    init {
-        try {
-            adapterCallbackInterface = context as AppAdapterCallbackInterface
-        } catch (e: ClassCastException) {
-            throw RuntimeException(context.toString() + "Activity must implement AppAdapterCallbackInterface.", e)
-        }
-    }
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(
                 R.layout.adapter_apps,
@@ -85,28 +90,25 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
 
 
         holder.appCancelBtn.setOnClickListener {
-            adapterCallbackInterface?.onCancelApp(listDetails)
+            cancelApp(listDetails)
         }
         holder.appSymptomsBtn.setOnClickListener {
             ClassAlertDialog(context).alertMessage("${listDetails.pat_symptoms}","symptoms")
         }
 
         holder.appViewPrescriptionBtn.setOnClickListener {
-            adapterCallbackInterface?.onViewPrescription(listDetails)
+            val drugs = Gson().fromJson(listDetails.doc_prescription, Array<DrugClassBinder>::class.java).asList()
 
+            val drugNames = drugs.map { it.drug_name }.toTypedArray()
 
-//            val drugs = Gson().fromJson("", Array<DrugClassBinder>::class.java).asList()
-//
-//            val drugNames = drugs.map { it.drug_name }.toTypedArray()
-//
-//            val builder = AlertDialog.Builder(context)
-//            builder.setTitle("Drug Prescriptions")
-//
-//            builder.setItems(drugNames,null)
-//            builder.setNegativeButton("CLOSE"){ _, _ ->}
-//
-//            val dialog = builder.create()
-//            dialog.show()
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Drug Prescriptions")
+
+            builder.setItems(drugNames,null)
+            builder.setNegativeButton("Close"){ _, _ ->}
+
+            val dialog = builder.create()
+            dialog.show()
         }
         holder.appPrescribeBtn.setOnClickListener {
             getDrugs(listDetails)
@@ -114,7 +116,7 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
 
 
     }
-    fun getDrugs(appsList: AppClassBinder){
+    private fun getDrugs(appsList: AppClassBinder){
         //creating volley string request
         val pDialog = ClassProgressDialog(context)
         pDialog.createDialog()
@@ -192,7 +194,7 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
         }
         // add OK and Cancel buttons
         builder.setPositiveButton("OK") { dialog, which ->
-            val selDrugList = mutableListOf<DrugClassBinder>()
+            var selDrugList = mutableListOf<DrugClassBinder>()
             for(i in 0 until drugList.size){
                 val drugDet = drugList[i]
                 val checked = checkedItems[i] //true or false
@@ -206,14 +208,13 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
             }
 
 
+            selDrugList = selDrugList.distinctBy { it.drug_id }.toMutableList()
             if (selDrugList.size==0){
                 ClassAlertDialog(context).toast("No drug selected...")
             }else{
-                adapterCallbackInterface!!.onPrescribe(appsList, selDrugList)
+//                adapterCallbackInterface!!.onPrescribe(appsList, selDrugList)//not used now
 
-
-//                Gson().toJson(mutableListOf(selDrugList))
-
+                prescribeDrug(appsList, selDrugList)
             }
         }
         builder.setNegativeButton("Cancel", null)
@@ -221,6 +222,90 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
         val dialog = builder.create()
         dialog.show()
     }
+
+    private fun  cancelApp(appsList: AppClassBinder){
+        //creating volley string request
+        val progressDialog = ClassProgressDialog(context,"Cancelling Appointment, Please Wait...")
+        progressDialog.createDialog()
+        val stringRequest =  object : StringRequest(Request.Method.POST, UrlHolder.URL_CANCEL_APP,
+                Response.Listener<String> { response ->
+                    progressDialog.dismissDialog()
+
+                    try {
+                        val obj = JSONObject(response)
+                        val responseMsg = obj.getString("message")
+
+                        if (responseMsg=="ok") {
+                            appsList.app_status = "1"
+
+                            notifyDataSetChanged()
+                        }else{
+                            ClassAlertDialog(context).toast(responseMsg)
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        Toast.makeText(context, e.printStackTrace().toString() + " Error", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                Response.ErrorListener { volleyError ->
+                    progressDialog.dismissDialog()
+                    Toast.makeText(context, volleyError.message, Toast.LENGTH_LONG).show()
+                }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String?> {
+                val params = java.util.HashMap<String, String?>()
+                params["request_type"] = "cancel_app"
+                params["app_id"] = appsList.app_id.toString()
+                return params
+            }
+        }
+        //adding request to queue
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+        //volley interactions end
+    }
+    private fun  prescribeDrug(appsList: AppClassBinder, selDrugIds:MutableList<DrugClassBinder>){
+        //creating volley string request
+        val progressDialog = ClassProgressDialog(context)
+        progressDialog.createDialog()
+        val stringRequest =  object : StringRequest(Request.Method.POST, UrlHolder.URL_CANCEL_APP,
+                Response.Listener<String> { response ->
+                    progressDialog.dismissDialog()
+
+                    try {
+                        val obj = JSONObject(response)
+                        val responseMsg = obj.getString("message")
+
+                        if (responseMsg=="ok") {
+                            appsList.app_status = "2"
+
+                            notifyDataSetChanged()
+                        }else{
+                            ClassAlertDialog(context).toast(responseMsg)
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        Toast.makeText(context, e.printStackTrace().toString() + " Error", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                Response.ErrorListener { volleyError ->
+                    progressDialog.dismissDialog()
+                    Toast.makeText(context, volleyError.message, Toast.LENGTH_LONG).show()
+                }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String?> {
+                val params = java.util.HashMap<String, String?>()
+                params["request_type"] = "add_prescription"
+                params["app_id"] = appsList.app_id.toString()
+                params["doc_prescription"] = Gson().toJson(mutableListOf(selDrugIds))
+                return params
+            }
+        }
+        //adding request to queue
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+        //volley interactions end
+    }
+
+
 
 
     inner class ViewHolder(v: View): RecyclerView.ViewHolder(v){
@@ -239,9 +324,240 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
 
 
     //interface declaration
-    interface AppAdapterCallbackInterface {
-        fun onCancelApp(appsList: AppClassBinder)
-        fun onPrescribe(appsList: AppClassBinder, selDrugIds:MutableList<DrugClassBinder>)
-        fun onViewPrescription(appsList: AppClassBinder)
+//    interface AppAdapterCallbackInterface {
+//        fun onPrescribe(appsList: AppClassBinder, selDrugIds:MutableList<DrugClassBinder>)
+//    }
+}
+class DocsAdapter(val list:MutableList<UserClassBinder>, val context: Context): RecyclerView.Adapter<DocsAdapter.ViewHolder>(){
+    private var adapterCallbackInterface: DocsAdapterCallbackInterface? = null
+
+
+    init {
+        try {
+            adapterCallbackInterface = context as DocsAdapterCallbackInterface
+        } catch (e: ClassCastException) {
+            throw RuntimeException(context.toString() + "Activity must implement DocsAdapterCallbackInterface.", e)
+        }
     }
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(
+                R.layout.adapter_apps,
+                parent,
+                false
+        ))
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    fun addItems(items: MutableList<UserClassBinder>) {
+        val lastPos = list.size - 1
+        list.addAll(items)
+        notifyItemRangeInserted(lastPos, items.size)
+    }
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val listDetails = list[position]
+
+        holder.docName.text = "${listDetails.name}"
+        holder.docProfile.text     = "A ${listDetails.speciality} with ${listDetails.age} years experience and handles different cases"
+        LoadImg(context,holder.docPhoto).execute(listDetails.photo_url)
+
+
+        holder.docSetAppBtn.setOnClickListener {
+            adapterCallbackInterface?.onMakeApp()
+        }
+
+    }
+    inner class ViewHolder(v: View): RecyclerView.ViewHolder(v){
+        val docWrapper = v.docWrapper!!
+        val docPhoto = v.docPhoto!!
+        val docProfile = v.docProfile!!
+        val docSetAppBtn = v.docSetAppBtn!!
+        val docName = v.docName!!
+    }
+
+
+
+    //interface declaration
+    interface DocsAdapterCallbackInterface {
+        fun onMakeApp()
+    }
+}
+class MyOrdersAdapter(val list:MutableList<DrugClassBinder>, val context: Context): RecyclerView.Adapter<MyOrdersAdapter.ViewHolder>(){
+    private var adapterCallbackInterface: OrdersAdapterCallbackInterface? = null
+
+
+    init {
+        try {
+            adapterCallbackInterface = context as OrdersAdapterCallbackInterface
+        } catch (e: ClassCastException) {
+            throw RuntimeException(context.toString() + "Activity must implement OrdersAdapterCallbackInterface.", e)
+        }
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(
+                R.layout.adapter_my_orders,
+                parent,
+                false
+        ))
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    fun addItems(items: MutableList<DrugClassBinder>) {
+        val lastPos = list.size - 1
+        list.addAll(items)
+        notifyItemRangeInserted(lastPos, items.size)
+    }
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val listDetails = list[position]
+
+        holder.orderDrugName.text = "Drug Name: ${listDetails.drug_name}"
+        holder.orderQty.text     = "${listDetails.drug_qty}"
+        holder.orderDrugUnitPrice.text = "Unit Price: ₦${listDetails.drug_price}"
+        holder.orderTotal.text     = "Total: ₦${listDetails.drug_price.toInt()*listDetails.drug_qty}"
+
+
+        holder.orderQtyMinus.setOnClickListener {
+            if (listDetails.drug_qty>1){
+                listDetails.drug_qty = listDetails.drug_qty-1
+
+                //Updating...
+                notifyDataSetChanged()
+
+                adapterCallbackInterface?.onOrderUpdate(list)
+            }
+        }
+        holder.orderQtyAdd.setOnClickListener {
+            listDetails.drug_qty = listDetails.drug_qty+1
+
+            //Updating...
+            notifyDataSetChanged()
+
+            adapterCallbackInterface?.onOrderUpdate(list)
+        }
+        holder.orderRemoveFromCartBtn.setOnClickListener {
+            try {list.removeAt(position)} catch (e: Exception) {e.printStackTrace()}
+            notifyItemRemoved(position)
+
+
+            adapterCallbackInterface?.onOrderRemove(list)
+        }
+
+    }
+    inner class ViewHolder(v: View): RecyclerView.ViewHolder(v){
+        val orderWrapper = v.orderWrapper!!
+        val orderDrugName = v.orderDrugName!!
+        val orderQtyMinus = v.orderQtyMinus!!
+        val orderQty = v.orderQty!!
+        val orderQtyAdd = v.orderQtyAdd!!
+        val orderDrugUnitPrice = v.orderDrugUnitPrice!!
+        val orderTotal = v.orderTotal!!
+        val orderRemoveFromCartBtn = v.orderRemoveFromCartBtn!!
+    }
+
+
+
+    //interface declaration
+    interface OrdersAdapterCallbackInterface {
+        fun onOrderUpdate(drugList: MutableList<DrugClassBinder>)
+        fun onOrderRemove(drugList: MutableList<DrugClassBinder>)
+    }
+}
+class DrugsAdapter(val list:MutableList<DrugClassBinder>, val context: Context): RecyclerView.Adapter<DrugsAdapter.ViewHolder>(){
+
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(
+                R.layout.adapter_search_drugs,
+                parent,
+                false
+        ))
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    fun addItems(items: MutableList<DrugClassBinder>) {
+        val lastPos = list.size - 1
+        list.addAll(items)
+        notifyItemRangeInserted(lastPos, items.size)
+    }
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val listDetails = list[position]
+
+        holder.drugName.text = listDetails.drug_name
+        holder.drugDesc.text     = listDetails.drug_desc
+
+
+        val curDrugOrders = (Gson().fromJson(ClassSharedPreferences(context).getOrderDetails(), Array<DrugClassBinder>::class.java).asList()).toMutableList()
+        if (listDetails in curDrugOrders){
+            holder.drugAddToCartBtn.visibility =View.GONE
+            holder.drugRemoveFromCartBtn.visibility =View.VISIBLE
+        }else{
+            holder.drugAddToCartBtn.visibility =View.VISIBLE
+            holder.drugRemoveFromCartBtn.visibility =View.GONE
+        }
+
+        holder.drugRemoveFromCartBtn.setOnClickListener {
+            if (listDetails in curDrugOrders){
+                curDrugOrders.remove(listDetails)
+            }
+            ClassSharedPreferences(context).setOrderDetails(Gson().toJson(curDrugOrders))
+
+            //Updating...
+            notifyDataSetChanged()
+        }
+
+        holder.drugAddToCartBtn.setOnClickListener {
+            if (listDetails !in curDrugOrders){
+                curDrugOrders.add(listDetails)
+            }
+            ClassSharedPreferences(context).setOrderDetails(Gson().toJson(curDrugOrders))
+
+            //Updating...
+            notifyDataSetChanged()
+        }
+
+    }
+    inner class ViewHolder(v: View): RecyclerView.ViewHolder(v){
+        val drugWrapper = v.drugWrapper!!
+        val drugName = v.drugName!!
+        val drugDesc = v.drugDesc!!
+        val drugRemoveFromCartBtn = v.drugRemoveFromCartBtn!!
+        val drugAddToCartBtn = v.drugAddToCartBtn!!
+    }
+
 }

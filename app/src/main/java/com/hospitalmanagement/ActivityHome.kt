@@ -13,7 +13,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_activity_home.*
 
-class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, FragmentDialogViewApps.FragmentDialogMyAppsInteractionListener {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +85,24 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    override fun onAddAppointment() {
+        addAppDialogShow()
+    }
+
+    //student clearance
+    private val dialogFragmentAddApp = FragmentDialogMakeApp()
+    private fun addAppDialogShow(){
+        if(dialogFragmentAddApp.isAdded)return
+
+        val ft = supportFragmentManager.beginTransaction()
+//        val prev = supportFragmentManager.findFragmentByTag("dialog")
+        val prev = supportFragmentManager.findFragmentByTag(FragmentDialogMakeApp::class.java.name)
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+        dialogFragmentAddApp.show(ft, FragmentDialogMakeApp::class.java.name)
+    }
 
 
 

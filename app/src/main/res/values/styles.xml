@@ -40,4 +40,11 @@
         <!--<item name="android:padding">8dp</item>-->
         <item name="android:layout_marginTop">4dp</item>
     </style>
+
+
+    <!--slide up doalog frag-->
+    <style name="Animation.WindowSlideUpDown" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
 </resources>

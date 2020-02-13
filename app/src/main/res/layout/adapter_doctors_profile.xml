@@ -7,9 +7,11 @@
     android:layout_height="wrap_content"
     android:background="@drawable/design_with_shadow"
     android:layout_margin="12dp"
+    android:id="@+id/docWrapper"
     android:padding="8dp">
 
     <ImageView
+        android:id="@+id/docPhoto"
         android:layout_width="130dp"
         android:layout_height="160dp"
         android:padding="3dp"
@@ -20,12 +22,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/docProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/colorDarkBlue"
             android:text="A Nueorogugeorn with 24 years experience and very ver good in many cases"/>
         <TextView
+            android:id="@+id/docSetAppBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
@@ -37,6 +41,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"/>
         <TextView
+            android:id="@+id/docName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"

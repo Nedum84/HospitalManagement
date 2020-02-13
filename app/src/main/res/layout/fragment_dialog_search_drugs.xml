@@ -1,14 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentDialogSearchDrugs">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/design_gradient_grey"
+    >
+    <LinearLayout
+        android:id="@+id/searchQHeader"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="2dp"
+        >
+        <ImageView
+            android:id="@+id/closeDialogFrag"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="2dp"
+            app:srcCompat="@drawable/ic_chevron_left_black_24dp"
+            tools:ignore="ContentDescription"
+            android:background="?android:selectableItemBackground"
+            />
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/questionSearchView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:iconifiedByDefault="false"
+            app:queryHint="Search Here"
+            app:defaultQueryHint="Search Here"
+            app:searchIcon="@null"
+            app:searchHintIcon="@null"
+            android:background="@null"
+            android:padding="0dp"
+            android:layout_marginLeft="-15dp"
+            android:layout_marginStart="-15dp"
+            />
 
-</FrameLayout>
+    </LinearLayout>
+    <View
+        android:layout_below="@id/searchQHeader"
+        android:id="@+id/searchQDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ccc"/>
+
+    <LinearLayout
+        android:id="@+id/searchQBody"
+        android:layout_below="@id/searchQHeader"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/no_question_search_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="No drug... "
+            android:visibility="gone"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchDRecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+</RelativeLayout>
