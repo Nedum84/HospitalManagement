@@ -66,6 +66,7 @@
             android:textSize="18sp"
             android:gravity="center"
             android:padding="16dp"
+            android:textStyle="normal"
             android:text="No drug... "
             android:visibility="gone"
             />

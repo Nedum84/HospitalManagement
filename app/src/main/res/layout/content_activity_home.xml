@@ -1,240 +1,366 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ActivityHome"
-    android:orientation="vertical"
-    android:padding="4dp">
-    <!--tools:showIn="@layout/app_bar_activity_home"-->
-
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:srcCompat="@drawable/adsu_logo1"
-        tools:ignore="ContentDescription"
-        android:layout_gravity="center_horizontal"/>
-    <TextView
-        android:id="@+id/welcomeMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:textColor="#212121"
-        android:gravity="center_horizontal"
-        android:text="ADSU Hospital"/>
+    tools:context=".ActivityHome">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/design_border_grey2"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="6dp">
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:srcCompat="@drawable/adsu_logo1"
+            tools:ignore="ContentDescription"
+            android:layout_gravity="center_horizontal"/>
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:layout_weight="1"
-            android:textColor="#777"
-            android:gravity="start"
-            android:text="Search for drug..."/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_search_black_24dp"
-            tools:ignore="ContentDescription"/>
-    </LinearLayout>
-
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1px"
-        android:background="#bbb"
-        android:layout_margin="4dp"/>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_person_add_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginRight="5dp"
-            android:layout_marginEnd="5dp" />
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:gravity="center_horizontal"
+            android:text="ADSU Hospital"/>
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_weight="1"
-            android:textColor="@color/colorWhite"
-            android:gravity="start"
-            android:text="Make Appointment"/>
-        <ImageView
-            android:layout_width="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:gravity="center_horizontal"
+            android:text="Management and Scheduling System"/>
+        <LinearLayout
+            android:id="@+id/search_drug"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginStart="-19sp"
-            android:layout_marginLeft="-19sp" />
-    </LinearLayout>
+            android:padding="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/design_border_grey2"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:textColor="#777"
+                android:gravity="start"
+                android:text="Search for drug..."/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_search_black_24dp"
+                tools:ignore="ContentDescription"/>
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_person_add_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginRight="5dp"
-            android:layout_marginEnd="5dp" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_weight="1"
-            android:textColor="@color/colorWhite"
-            android:gravity="start"
-            android:text="My Appointments"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginStart="-19sp"
-            android:layout_marginLeft="-19sp" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
-        <ImageView
+        <View
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_person_add_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginRight="5dp"
-            android:layout_marginEnd="5dp" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_weight="1"
-            android:textColor="@color/colorWhite"
-            android:gravity="start"
-            android:text="Order Drugs"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginStart="-19sp"
-            android:layout_marginLeft="-19sp" />
-    </LinearLayout>
+            android:layout_height="1px"
+            android:background="#bbb"
+            android:layout_margin="4dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_person_add_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginRight="5dp"
-            android:layout_marginEnd="5dp" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_weight="1"
-            android:textColor="@color/colorWhite"
-            android:gravity="start"
-            android:text="My Medical Report"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginStart="-19sp"
-            android:layout_marginLeft="-19sp" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
+        <com.github.florent37.shapeofview.shapes.CutCornerView
+            android:id="@+id/view_doctors"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_person_add_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginRight="5dp"
-            android:layout_marginEnd="5dp" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_weight="1"
-            android:textColor="@color/colorWhite"
-            android:gravity="start"
-            android:text="View my order history"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
-            tools:ignore="ContentDescription"
-            android:layout_marginStart="-19sp"
-            android:layout_marginLeft="-19sp" />
-    </LinearLayout>
+            app:shape_cutCorner_bottomLeftSize="12dp"
+            app:shape_cutCorner_topLeftSize="12dp"
+            app:shape_cutCorner_topRightSize="12dp"
+            app:shape_cutCorner_bottomRightSize="12dp"
+            android:layout_marginTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_person_pin_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Check our Doctors"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:padding="8dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginStart="-10dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-18dp"
+                    android:layout_marginStart="-18dp" />
 
-</LinearLayout>
+            </LinearLayout>
+
+        </com.github.florent37.shapeofview.shapes.CutCornerView>
+        <com.github.florent37.shapeofview.shapes.CutCornerView
+            android:id="@+id/make_appointment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shape_cutCorner_bottomLeftSize="12dp"
+            app:shape_cutCorner_topLeftSize="12dp"
+            app:shape_cutCorner_topRightSize="12dp"
+            app:shape_cutCorner_bottomRightSize="12dp"
+            android:layout_marginTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_person_add_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Make Appointment"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:padding="8dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginStart="-10dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-18dp"
+                    android:layout_marginStart="-18dp" />
+
+            </LinearLayout>
+
+        </com.github.florent37.shapeofview.shapes.CutCornerView>
+        <com.github.florent37.shapeofview.shapes.CutCornerView
+            android:id="@+id/my_appointments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shape_cutCorner_bottomLeftSize="12dp"
+            app:shape_cutCorner_topLeftSize="12dp"
+            app:shape_cutCorner_topRightSize="12dp"
+            app:shape_cutCorner_bottomRightSize="12dp"
+            android:layout_marginTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_developer_mode_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="My Appointments"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:padding="8dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginStart="-10dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-18dp"
+                    android:layout_marginStart="-18dp" />
+
+            </LinearLayout>
+
+        </com.github.florent37.shapeofview.shapes.CutCornerView>
+        <com.github.florent37.shapeofview.shapes.CutCornerView
+            android:id="@+id/order_drugs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shape_cutCorner_bottomLeftSize="12dp"
+            app:shape_cutCorner_topLeftSize="12dp"
+            app:shape_cutCorner_topRightSize="12dp"
+            app:shape_cutCorner_bottomRightSize="12dp"
+            android:layout_marginTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_add_shopping_cart_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Order Drugs"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:padding="8dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginStart="-10dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-18dp"
+                    android:layout_marginStart="-18dp" />
+
+            </LinearLayout>
+
+        </com.github.florent37.shapeofview.shapes.CutCornerView>
+        <com.github.florent37.shapeofview.shapes.CutCornerView
+            android:id="@+id/check_my_med_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shape_cutCorner_bottomLeftSize="12dp"
+            app:shape_cutCorner_topLeftSize="12dp"
+            app:shape_cutCorner_topRightSize="12dp"
+            app:shape_cutCorner_bottomRightSize="12dp"
+            android:layout_marginTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_local_hospital_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Check my Medical Report"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:padding="8dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginStart="-10dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-18dp"
+                    android:layout_marginStart="-18dp" />
+
+            </LinearLayout>
+
+        </com.github.florent37.shapeofview.shapes.CutCornerView>
+        <com.github.florent37.shapeofview.shapes.CutCornerView
+            android:id="@+id/order_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shape_cutCorner_bottomLeftSize="12dp"
+            app:shape_cutCorner_topLeftSize="12dp"
+            app:shape_cutCorner_topRightSize="12dp"
+            app:shape_cutCorner_bottomRightSize="12dp"
+            android:layout_marginTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_archive_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="View my Order History"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:padding="8dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginStart="-10dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp"
+                    tools:ignore="ContentDescription"
+                    android:layout_marginLeft="-18dp"
+                    android:layout_marginStart="-18dp" />
+
+            </LinearLayout>
+
+        </com.github.florent37.shapeofview.shapes.CutCornerView>
+
+
+    </LinearLayout>
+</ScrollView>

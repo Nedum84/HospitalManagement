@@ -7,13 +7,13 @@
     android:layout_height="wrap_content"
     android:background="@drawable/design_with_shadow"
     android:layout_margin="12dp"
-    android:id="@+id/docWrapper"
+    android:id="@+id/doc2Wrapper"
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/docPhoto"
-        android:layout_width="130dp"
-        android:layout_height="160dp"
+        android:id="@+id/doc2Photo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:padding="3dp"
         app:srcCompat="@drawable/user"
         tools:ignore="ContentDescription"/>
@@ -22,32 +22,38 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/docProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/colorDarkBlue"
-            android:text="A Nueorogugeorn with 24 years experience and very ver good in many cases"/>
-        <TextView
-            android:id="@+id/docSetAppBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/colorWhite"
-            android:padding="6dp"
-            android:gravity="center_horizontal"
-            android:background="@color/colorPrimary"
-            android:text="Set Appointment"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"/>
-        <TextView
-            android:id="@+id/docName"
+            android:id="@+id/doc2Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/colorDarkBlue"
             android:text="Dr. Emeka Paul Christian"/>
+        <TextView
+            android:id="@+id/doc2AreaOfSpeciality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorDarkBlue"
+            android:text="Speciality: Neurosurgeon"/>
+        <TextView
+            android:id="@+id/doc2YrOfExp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/colorDarkBlue"
+            android:text="Years of experience: 14"/>
+        <TextView
+            android:id="@+id/doc2RemDocBtn"
+            android:background="@drawable/design_border_radius_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@color/colorRed"
+            android:layout_margin="4dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Remove Doctor"/>
     </LinearLayout>
 
 </LinearLayout>

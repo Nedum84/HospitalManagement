@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/design_border_grey"
     android:layout_margin="4dp"
-    android:id="@+id/drugWrapper"
+    android:id="@+id/orderHistoryWrapper"
     android:gravity="center_vertical"
     android:padding="6dp"
     android:baselineAligned="false">
@@ -18,44 +18,38 @@
         android:orientation="vertical"
         android:layout_weight="1">
         <TextView
-            android:id="@+id/drugName"
+            android:id="@+id/orderHistoryOrderNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/colorDarkBlue"
-            android:text="Paracetamol"/>
+            android:text="Order No: #67865434"/>
         <TextView
-            android:id="@+id/drugDesc"
+            android:id="@+id/orderHistoryNoOfDrugs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textStyle="italic"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="Relieves headache and every form of wahala"/>
+            android:text="15 products"/>
     </LinearLayout>
     <TextView
-        android:id="@+id/drugPrice"
+        android:id="@+id/orderHistoryPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"
         android:textColor="@color/colorDarkBlue"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:text="₦50.00"/>
+        android:text="₦490.00"/>
     <LinearLayout
-        android:id="@+id/drugRemoveFromCartBtn"
+        android:id="@+id/orderHistoryDetailsBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"
         android:background="@drawable/design_border_radius_grey"
         android:orientation="horizontal">
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="3dp"
-            app:srcCompat="@drawable/ic_remove_black_24dp"
-            tools:ignore="ContentDescription"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,29 +57,7 @@
             android:textColor="@color/colorRed"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:text="Remove"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/drugAddToCartBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:background="@drawable/design_border_radius_grey"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="3dp"
-            app:srcCompat="@drawable/ic_add_shopping_cart_black_24dp"
-            tools:ignore="ContentDescription"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textColor="@color/colorDarkBlue"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="Add"/>
+            android:text="Details"/>
     </LinearLayout>
 
 </LinearLayout>

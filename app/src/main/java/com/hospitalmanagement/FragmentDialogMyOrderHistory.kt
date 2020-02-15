@@ -18,24 +18,24 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import kotlinx.android.synthetic.main.fragment_dialog_view_apps.*
+import kotlinx.android.synthetic.main.fragment_dialog_my_order_history.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
 
-class FragmentDialogViewApps: DialogFragment() {
-    var listener: FragmentDialogMyAppsInteractionListener? = null
+class FragmentDialogMyOrderHistory: DialogFragment() {
+    var listener: FragmentDialogOrdersHistoryInteractionListener? = null
     lateinit var thisContext: Activity
 
-    private var appList = mutableListOf<AppClassBinder>()
+    private var myOrderHistoryList = mutableListOf<MyOrderHistoryClassBinder>()
     lateinit var linearLayoutManager: LinearLayoutManager
-    lateinit var ADAPTER : AppsAdapter
+    lateinit var ADAPTER : MyOrdersHistoryAdapter
 
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_dialog_view_apps, container, false)
+        return inflater.inflate(R.layout.fragment_dialog_my_order_history, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,14 +48,14 @@ class FragmentDialogViewApps: DialogFragment() {
 
 
         linearLayoutManager = LinearLayoutManager(thisContext)
-        ADAPTER = AppsAdapter(appList,thisContext)
-        apps_recyclerview.layoutManager = linearLayoutManager
-        apps_recyclerview.itemAnimator = DefaultItemAnimator()
-        apps_recyclerview.adapter = ADAPTER
+        ADAPTER = MyOrdersHistoryAdapter(myOrderHistoryList,thisContext)
+        order_history_recyclerview.layoutManager = linearLayoutManager
+        order_history_recyclerview.itemAnimator = DefaultItemAnimator()
+        order_history_recyclerview.adapter = ADAPTER
 
-        addAppointmentBtn.setOnClickListener {
+        orderDrugsBtn.setOnClickListener {
             dialog!!.dismiss()
-            listener!!.onAddAppointment()
+            listener!!.onAddOrders()
         }
         tapToRetry.setOnClickListener {
             refreshList()
@@ -68,8 +68,8 @@ class FragmentDialogViewApps: DialogFragment() {
     }
 
     private fun refreshList(){
-        appList.clear()
-        ADAPTER.addItems(appList)
+        myOrderHistoryList.clear()
+        ADAPTER.addItems(myOrderHistoryList)
         ADAPTER.notifyDataSetChanged()
         loadApps()
     }
@@ -79,42 +79,33 @@ class FragmentDialogViewApps: DialogFragment() {
         loadingProgressbar?.visibility = View.VISIBLE
         no_network_tag?.visibility = View.GONE
         no_data_tag.visibility = View.GONE
-        val stringRequest = object : StringRequest(Method.POST, UrlHolder.URL_GET_APPS,
+        val stringRequest = object : StringRequest(Method.POST, UrlHolder.URL_ORDER_HISTORY,
                 Response.Listener<String> { response ->
                     loadingProgressbar?.visibility = View.GONE
 
                     try {
                         val obj = JSONObject(response)
                         if (!obj.getBoolean("error")) {
-                            val jsonResponse = obj.getJSONArray("appsz_arraysz")
+                            val jsonResponse = obj.getJSONArray("orders_arraysz")
 
                             if ((jsonResponse.length()!=0)){
-                                val qDataArray = mutableListOf<AppClassBinder>()
+                                val qDataArray = mutableListOf<MyOrderHistoryClassBinder>()
                                 for (i in 0 until jsonResponse.length()) {
                                     val jsonObj = jsonResponse.getJSONObject(i)
-                                    val subject = AppClassBinder(
-                                            jsonObj.getInt("app_id"),
-                                            jsonObj.getString("app_date"),
-                                            jsonObj.getString("pat_id"),
-                                            jsonObj.getString("pat_name"),
-                                            jsonObj.getString("pat_symptoms"),
-                                            jsonObj.getString("doc_prescription"),
-                                            jsonObj.getString("doc_id"),
-                                            jsonObj.getString("doc_name"),
-                                            jsonObj.getString("app_status")
+                                    val data = MyOrderHistoryClassBinder(
+                                            jsonObj.getString("order_id"),
+                                            jsonObj.getString("order_no"),
+                                            jsonObj.getString("order_price"),
+                                            jsonObj.getString("order_drugs"),
+                                            jsonObj.getString("pat_id")
                                     )
-                                    if (subject !in appList)qDataArray.add(subject)
+                                    if (data !in myOrderHistoryList)qDataArray.add(data)
                                 }
                                 ADAPTER.addItems(qDataArray)
 
                             }else{
-                                ClassAlertDialog(thisContext).toast("No data found...")
                                 no_data_tag?.visibility = View.VISIBLE
-                                if (ClassSharedPreferences(thisContext).getUserLevel()=="1"){
-                                    addAppointmentBtn.visibility = View.VISIBLE
-                                }else{
-                                    addAppointmentBtn.visibility = View.GONE
-                                }
+                                orderDrugsBtn.visibility = View.VISIBLE
                             }
                         } else {
                             ClassAlertDialog(thisContext).toast("An error occurred, try again...")
@@ -132,7 +123,7 @@ class FragmentDialogViewApps: DialogFragment() {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String?> {
                 val params = HashMap<String, String?>()
-                params["request_type"] = "get_apps"
+                params["request_type"] = "get_orders"
                 params["user_id"] = ClassSharedPreferences(thisContext).getUserId()
                 return params
             }
@@ -179,7 +170,7 @@ class FragmentDialogViewApps: DialogFragment() {
     //Fragment communication with the Home Activity Starts
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentDialogMyAppsInteractionListener) {
+        if (context is FragmentDialogOrdersHistoryInteractionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
@@ -191,9 +182,10 @@ class FragmentDialogViewApps: DialogFragment() {
         listener = null
     }
 
-    interface FragmentDialogMyAppsInteractionListener {
-        fun onAddAppointment()
+    interface FragmentDialogOrdersHistoryInteractionListener {
+        fun onAddOrders()
     }
     //Fragment communication with the Home Activity Stops
 }
+
 

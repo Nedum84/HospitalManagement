@@ -7,6 +7,8 @@ import android.content.res.Configuration
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import com.google.gson.Gson
+import org.json.JSONException
+import org.json.JSONObject
 
 
 class ClassUtilities() {
@@ -61,6 +63,34 @@ class ClassUtilities() {
 
         return selUsers.distinct().toMutableList()
     }
+    fun getAllDrugs():MutableList<DrugClassBinder>{
+        val return_ = mutableListOf<DrugClassBinder>()
+        try {
+            val obj = JSONObject(UrlHolder.allDrugs)
+            if (!obj.getBoolean("error")) {
+                val jsonResponse = obj.getJSONArray("drugsz_arraysz")
+
+                if ((jsonResponse.length()!=0)){
+
+                    for (i in 0 until jsonResponse.length()) {
+                        val jsonObj = jsonResponse.getJSONObject(i)
+                        val subject = DrugClassBinder(
+                                jsonObj.getString("drug_id"),
+                                jsonObj.getString("drug_name"),
+                                jsonObj.getString("drug_desc"),
+                                jsonObj.getString("drug_price")
+                        )
+                        return_.add(subject)
+                    }
+                }
+            }
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        return return_.distinct().toMutableList()
+    }
+
 
 
 }

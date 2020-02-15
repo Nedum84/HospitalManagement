@@ -10,5 +10,5 @@ data class AppClassBinder(val app_id: Int?,val app_date: String, val pat_id: Str
                           val pat_symptoms: String?, val doc_prescription: String?, val doc_id: String?, val doc_name: String?
                           , var app_status: String?)//app status:: 0->pending, 1->cancelled,2-> done
 data class DrugClassBinder(val drug_id: String?,val drug_name: String, val drug_desc: String, val drug_price: String, var drug_qty: Int=1)//drug qty for order quantities
-data class DocClassBinder(val drug_id: String?,val drug_name: String, val drug_desc: String, val drug_price: String, val drug_qty: Int=0)//drug qty for order quantities
+data class MyOrderHistoryClassBinder(val order_id: String?,val order_no: String?, val order_price: String?, val order_drugs: String?, val pat_id: String?)//drug qty for order quantities
 

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true"
+        android:padding="10dp"
+        android:gravity="center_horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Account Login"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:textColor="#777"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#bdbdbd"
+            android:layout_marginBottom="12dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@drawable/design_border_radius_grey"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/genLogUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawablePadding="5dp"
+                android:maxLength="19"
+                android:textSize="16sp"
+                android:hint="Username or phone number..."
+                android:textColor="#777"
+                android:textColorHint="#c4c4c4"
+                tools:ignore="Autofill" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@drawable/design_border_radius_grey"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/genLogPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawablePadding="5dp"
+                android:inputType="textPassword"
+                android:maxLength="19"
+                android:textSize="16sp"
+                android:hint="Password..."
+                android:textColor="#777"
+                android:textColorHint="#c4c4c4"
+                tools:ignore="Autofill" />
+
+        </LinearLayout>
+
+        <com.github.florent37.shapeofview.shapes.CutCornerView
+            android:id="@+id/genLogBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shape_cutCorner_bottomLeftSize="3dp"
+            app:shape_cutCorner_topLeftSize="3dp"
+            app:shape_cutCorner_topRightSize="3dp"
+            app:shape_cutCorner_bottomRightSize="3dp"
+            android:layout_marginTop="8dp">
+            <TextView
+                android:id="@+id/payment_total_amount2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:gravity="center_horizontal"
+                android:textColor="#FFFFFF"
+                android:background="#2CBD4E"
+                android:textStyle="bold"
+                android:padding="16dp"/>
+
+        </com.github.florent37.shapeofview.shapes.CutCornerView>
+
+
+    </LinearLayout>
+</ScrollView>

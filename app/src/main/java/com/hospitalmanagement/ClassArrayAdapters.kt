@@ -1,6 +1,7 @@
 package com.hospitalmanagement
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
@@ -15,7 +16,9 @@ import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.adapter_apps.view.*
 import kotlinx.android.synthetic.main.adapter_doctors_profile.view.*
+import kotlinx.android.synthetic.main.adapter_doctors_profile2.view.*
 import kotlinx.android.synthetic.main.adapter_my_orders.view.*
+import kotlinx.android.synthetic.main.adapter_order_history.view.*
 import kotlinx.android.synthetic.main.adapter_search_drugs.view.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -341,7 +344,7 @@ class DocsAdapter(val list:MutableList<UserClassBinder>, val context: Context): 
     }
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(
-                R.layout.adapter_apps,
+                R.layout.adapter_doctors_profile,
                 parent,
                 false
         ))
@@ -520,6 +523,7 @@ class DrugsAdapter(val list:MutableList<DrugClassBinder>, val context: Context):
 
         holder.drugName.text = listDetails.drug_name
         holder.drugDesc.text     = listDetails.drug_desc
+        holder.drugPrice.text = "₦${listDetails.drug_price}.00"
 
 
         val curDrugOrders = (Gson().fromJson(ClassSharedPreferences(context).getOrderDetails(), Array<DrugClassBinder>::class.java).asList()).toMutableList()
@@ -551,6 +555,7 @@ class DrugsAdapter(val list:MutableList<DrugClassBinder>, val context: Context):
             notifyDataSetChanged()
         }
         holder.drugWrapper.setOnClickListener {
+            ClassUtilities().hideKeyboard(it, (context as Activity))
             ClassAlertDialog(context).alertMessage("${listDetails.drug_desc}","${listDetails.drug_name}")
         }
 
@@ -559,8 +564,149 @@ class DrugsAdapter(val list:MutableList<DrugClassBinder>, val context: Context):
         val drugWrapper = v.drugWrapper!!
         val drugName = v.drugName!!
         val drugDesc = v.drugDesc!!
+        val drugPrice = v.drugPrice!!
         val drugRemoveFromCartBtn = v.drugRemoveFromCartBtn!!
         val drugAddToCartBtn = v.drugAddToCartBtn!!
     }
 
+}
+
+class MyOrdersHistoryAdapter(val list:MutableList<MyOrderHistoryClassBinder>, val context: Context): RecyclerView.Adapter<MyOrdersHistoryAdapter.ViewHolder>(){
+
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(
+                R.layout.adapter_order_history,
+                parent,
+                false
+        ))
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    fun addItems(items: MutableList<MyOrderHistoryClassBinder>) {
+        val lastPos = list.size - 1
+        list.addAll(items)
+        notifyItemRangeInserted(lastPos, items.size)
+    }
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val listDetails = list[position]
+
+        val drugOrders = (Gson().fromJson(listDetails.order_drugs, Array<DrugClassBinder>::class.java).asList()).toMutableList()
+
+        holder.orderHistoryOrderNo.text = "Order No: #${listDetails.order_no}"
+        holder.orderHistoryPrice.text = "₦${listDetails.order_price}.00"
+        holder.orderHistoryNoOfDrugs.text = "${drugOrders.size} Products Ordered"
+
+        holder.orderHistoryWrapper.setOnClickListener {
+
+            val dOrders = drugOrders.map { it.drug_name +" - ${it.drug_qty}(₦${it.drug_price})"}.toTypedArray()
+
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("#${listDetails.order_no} Details")
+
+            builder.setItems(dOrders,null)
+            builder.setNegativeButton("Close"){ _, _ ->}
+
+            val dialog = builder.create()
+            dialog.show()
+        }
+
+    }
+    inner class ViewHolder(v: View): RecyclerView.ViewHolder(v){
+        val orderHistoryWrapper = v.orderHistoryWrapper!!
+        val orderHistoryOrderNo = v.orderHistoryOrderNo!!
+        val orderHistoryNoOfDrugs = v.orderHistoryNoOfDrugs!!
+        val orderHistoryPrice = v.orderHistoryPrice!!
+        val orderHistoryDetailsBtn = v.orderHistoryDetailsBtn!!
+    }
+
+}
+
+class DocsAdapter2(val list:MutableList<UserClassBinder>, val context: Context): RecyclerView.Adapter<DocsAdapter2.ViewHolder>(){
+    private var adapterCallbackInterface: DocsAdapterCallbackInterface2? = null
+
+
+    init {
+        try {
+            adapterCallbackInterface = context as DocsAdapterCallbackInterface2
+        } catch (e: ClassCastException) {
+            throw RuntimeException(context.toString() + "Activity must implement DocsAdapterCallbackInterface2.", e)
+        }
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(
+                R.layout.adapter_doctors_profile2,
+                parent,
+                false
+        ))
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    fun addItems(items: MutableList<UserClassBinder>) {
+        val lastPos = list.size - 1
+        list.addAll(items)
+        notifyItemRangeInserted(lastPos, items.size)
+    }
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val listDetails = list[position]
+
+        holder.doc2Name.text = "${listDetails.name}"
+        holder.doc2AreaOfSpeciality.text     = "Speciality: ${listDetails.speciality}"
+        holder.doc2YrOfExp.text     = "Speciality: ${listDetails.age}"
+        LoadImg(context,holder.doc2Photo).execute(listDetails.photo_url)
+
+
+        holder.doc2RemDocBtn.setOnClickListener {
+            AlertDialog.Builder(context)
+                    .setMessage("Login to view your Order History")
+                    .setPositiveButton("Login"
+                    ) { _, _ ->
+                        adapterCallbackInterface?.onRemoveDoc(listDetails)
+
+                    }.setNegativeButton("Cancel"
+                    ) { _, _ -> }
+                    .show()
+        }
+
+    }
+    inner class ViewHolder(v: View): RecyclerView.ViewHolder(v){
+        val doc2Wrapper = v.doc2Wrapper!!
+        val doc2Photo = v.doc2Photo!!
+        val doc2Name = v.doc2Name!!
+        val doc2AreaOfSpeciality = v.doc2AreaOfSpeciality!!
+        val doc2YrOfExp = v.doc2YrOfExp!!
+        val doc2RemDocBtn = v.doc2RemDocBtn!!
+    }
+
+
+
+    //interface declaration
+    interface DocsAdapterCallbackInterface2 {
+        fun onRemoveDoc(user_details:UserClassBinder)
+    }
 }

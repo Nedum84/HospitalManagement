@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_menu_search_drug"
+        android:orderInCategory="100"
+        android:title="Search Drug"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_menu_order_drug"
+        android:orderInCategory="100"
+        android:title="Order Drug"
+        android:icon="@drawable/ic_add_shopping_cart_white_24dp"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_menu_order_drug2"
+        android:orderInCategory="100"
+        android:title="Order Drugs"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_profile"
+        android:orderInCategory="100"
+        android:title="My profile"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="100"
+        android:title="Logout"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_share"
+        android:title="Login"
+        android:icon="@drawable/ic_menu_share"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/menu_login_pat"
+                android:title="Patient"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/menu_login_doc"
+                android:title="Doctor"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/menu_login_phm"
+                android:title="Pharmacy"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/menu_login_admin"
+                android:title="Admin"
+                app:showAsAction="never"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_about_us"
+        android:orderInCategory="100"
+        android:title="About"
+        app:showAsAction="never" />
+</menu>

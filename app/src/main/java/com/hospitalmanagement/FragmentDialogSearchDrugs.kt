@@ -120,7 +120,7 @@ class FragmentDialogSearchDrugs: DialogFragment() {
                                 no_question_search_tag?.visibility = View.VISIBLE
                                 no_question_search_tag?.text = ClassHtmlFormater().fromHtml("No result found for <b><i>\"$search_query\"</i></b> ")
                             }
-                        } else {
+                        } else{
                             ClassAlertDialog(thisContext).toast("An error occurred, try again...")
                         }
 
@@ -128,7 +128,8 @@ class FragmentDialogSearchDrugs: DialogFragment() {
                         e.printStackTrace()
                     }
                 },
-                com.android.volley.Response.ErrorListener { _ ->
+                com.android.volley.Response.ErrorListener { vError ->
+                    vError.printStackTrace()
                     isLoadingDataFromServer = false
 
                     if(dList.size == 0){
@@ -149,6 +150,32 @@ class FragmentDialogSearchDrugs: DialogFragment() {
         }
         VolleySingleton.instance?.addToRequestQueue(stringRequest)//adding request to queue
         //volley interactions end
+    }
+
+    private fun loadSearchedDrug2(search_query:String) {
+        no_question_search_tag?.visibility = View.VISIBLE
+        no_question_search_tag.text = "Searching..."
+        refreshAdapter()
+
+        val allDrugs = ClassUtilities().getAllDrugs()
+        val dataArray = mutableListOf<DrugClassBinder>()
+        for (d in allDrugs){
+            if (search_query.isNotEmpty()){
+                if(search_query !in d.drug_name){
+                    continue
+                }
+            }
+            dataArray.add(d)
+        }
+
+        if ((dataArray.size!=0)){
+            no_question_search_tag?.visibility = View.GONE
+            ADAPTER.addItems(dataArray)
+
+        }else{
+            no_question_search_tag?.visibility = View.VISIBLE
+            no_question_search_tag?.text = ClassHtmlFormater().fromHtml("No drug found for <b><i>\"$search_query\"</i></b> ")
+        }
     }
 
     fun refreshAdapter(){
