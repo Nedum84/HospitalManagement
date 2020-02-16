@@ -2,6 +2,7 @@ package com.hospitalmanagement
 
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -22,7 +23,9 @@ import com.android.volley.toolbox.StringRequest
 import kotlinx.android.synthetic.main.fragment_dialog_make_app.*
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.HashMap
+import android.widget.TimePicker
+import android.widget.DatePicker
+import java.util.*
 
 
 class FragmentDialogMakeApp : DialogFragment() {
@@ -46,8 +49,34 @@ class FragmentDialogMakeApp : DialogFragment() {
         addAppointmentBtn.setOnClickListener {
             processAppointment()
         }
+        addAppDate.setOnClickListener {
+            dateTimeDialog()
+        }
 
         docSpecialitySpinnerInitialize()
+    }
+
+    var appDateTime:Long = 0
+    private fun dateTimeDialog() {
+        val dialogView = View.inflate(activity, R.layout.date_time_picker, null)
+        val alertDialog = AlertDialog.Builder(activity).create()
+
+        dialogView.findViewById<View>(R.id.date_time_set).setOnClickListener {
+            val datePicker = dialogView.findViewById<View>(R.id.date_picker) as DatePicker
+            val timePicker = dialogView.findViewById<View>(R.id.time_picker) as TimePicker
+
+            val calendar = GregorianCalendar(datePicker.year,
+                    datePicker.month,
+                    datePicker.dayOfMonth,
+                    timePicker.currentHour,
+                    timePicker.currentMinute)
+
+            appDateTime = calendar.timeInMillis
+            addAppDate.text = ClassDateAndTime().getDateTime(appDateTime)
+            alertDialog.dismiss()
+        }
+        alertDialog.setView(dialogView)
+        alertDialog.show()
     }
 
 
@@ -58,7 +87,7 @@ class FragmentDialogMakeApp : DialogFragment() {
         return string.isEmpty()
     }
     private fun processAppointment() {
-        val addAppDate = toString(addAppDate)
+//        val addAppDate = addAppDate.text.toString().trim()
         val addAppSymptoms = toString(addAppSymptoms)
 
 
@@ -67,8 +96,8 @@ class FragmentDialogMakeApp : DialogFragment() {
             ClassAlertDialog(thisContext).toast("Select speciality...")
         }else if(checkEmpty(doctorId)){
             ClassAlertDialog(thisContext).toast("Select doctor...")
-        }else if(checkEmpty(addAppDate)){
-            ClassAlertDialog(thisContext).toast("Enter the date")
+        }else if(appDateTime.toInt()==0){
+            ClassAlertDialog(thisContext).toast("Enter the date...")
         }else if(checkEmpty(addAppSymptoms)){
             ClassAlertDialog(thisContext).toast("Enter the symptoms...")
         }else{
@@ -83,7 +112,7 @@ class FragmentDialogMakeApp : DialogFragment() {
                         try {
 
                             val obj = JSONObject(response)
-                            val regStatus = obj.getString("app_status");
+                            val regStatus = obj.getString("app_status")
                             if (regStatus == "ok") {
                                 ClassAlertDialog(thisContext).toast("Appointment submitted successfully...")
 
@@ -103,7 +132,7 @@ class FragmentDialogMakeApp : DialogFragment() {
                 override fun getParams(): Map<String, String> {
                     val params = HashMap<String, String>()
                     params["request_type"] = "add_app"
-                    params["app_date"] = addAppDate
+                    params["app_date"] = "$appDateTime"
                     params["pat_id"] = ClassSharedPreferences(thisContext).getUserId()!!
                     params["pat_symptoms"] = addAppSymptoms
                     params["doc_id"] = doctorId

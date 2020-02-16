@@ -23,7 +23,8 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.HashMap
 
-class ActivityMyOrders : AppCompatActivity(), MyOrdersAdapter.OrdersAdapterCallbackInterface, FragmentDialogSearchDrugs.FragmentDialogSearchDrugInteractionListener {
+class ActivityMyOrders : AppCompatActivity(), MyOrdersAdapter.OrdersAdapterCallbackInterface
+        , FragmentDialogSearchDrugs.FragmentDialogSearchDrugInteractionListener, FragmentDialogLoginRegister.FragmentStRegisterInteractionListener {
 
     private var drugList = mutableListOf<DrugClassBinder>()
 
@@ -47,7 +48,6 @@ class ActivityMyOrders : AppCompatActivity(), MyOrdersAdapter.OrdersAdapterCallb
         my_orders_recyclerview.layoutManager = linearLayoutManager
         my_orders_recyclerview.itemAnimator = DefaultItemAnimator()
         my_orders_recyclerview.adapter = ADAPTER
-        loadDrugs()
 
         addToCartBtn.setOnClickListener {
             //sow cart fragment
@@ -74,6 +74,11 @@ class ActivityMyOrders : AppCompatActivity(), MyOrdersAdapter.OrdersAdapterCallb
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadDrugs()
     }
 
     var paymentAlertDialog: AlertDialog? = null
@@ -112,6 +117,7 @@ class ActivityMyOrders : AppCompatActivity(), MyOrdersAdapter.OrdersAdapterCallb
 
                             paymentAlertDialog?.dismiss()
                             ClassSharedPreferences(thisContext).setOrderDetails(Gson().toJson(mutableListOf<DrugClassBinder>()))
+                            refreshList()
                         } else {
                             ClassAlertDialog(thisContext).toast(clrStatus)
                         }
@@ -198,6 +204,11 @@ class ActivityMyOrders : AppCompatActivity(), MyOrdersAdapter.OrdersAdapterCallb
     //from drug order adapter
     override fun onCloseSearchDrugDialog() {
         refreshList()
+    }
+    //for successful login
+    override fun onRegSuccessful() {
+        finish()
+        startActivity(intent)
     }
 
 

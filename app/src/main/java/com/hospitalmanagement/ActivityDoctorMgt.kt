@@ -81,7 +81,7 @@ class ActivityDoctorMgt: AppCompatActivity(), DocsAdapter2.DocsAdapterCallbackIn
                         val obj = JSONObject(response)
                         val resStatus = obj.getString("message");
                         if (resStatus == "ok") {
-                            ClassAlertDialog(thisContext).toast("Registration successful...")
+                            ClassAlertDialog(thisContext).toast("Doctor removed...")
 
 
                             val allUserDetails = obj.getJSONArray("all_usersz_details")
@@ -101,7 +101,7 @@ class ActivityDoctorMgt: AppCompatActivity(), DocsAdapter2.DocsAdapterCallbackIn
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
                 params["request_type"] = "remove_doc"
-                params["doc_id"] = ClassSharedPreferences(thisContext).getUserId()!!
+                params["doc_id"] = user_details.user_id!!
                 return params
             }
         }
@@ -139,7 +139,7 @@ class ActivityDoctorMgt: AppCompatActivity(), DocsAdapter2.DocsAdapterCallbackIn
                 )
                 qDataArray.add(eachData)
             }
-            preference.setAllUsersJSONDetails(Gson().toJson(mutableListOf(qDataArray)))
+            preference.setAllUsersJSONDetails(Gson().toJson(qDataArray))
         }
 
         refreshList()
@@ -190,13 +190,13 @@ class ActivityDoctorMgt: AppCompatActivity(), DocsAdapter2.DocsAdapterCallbackIn
             val regDocPassword = toString(inflater.regDocPassword)
 
             if (checkEmpty(regDocName)) {
-                ClassAlertDialog(thisContext).toast("name is required")
+                ClassAlertDialog(thisContext).toast("Name is required")
             } else if (checkEmpty(regDocPhone)) {
-                ClassAlertDialog(thisContext).toast("Enter  phone number")
+                ClassAlertDialog(thisContext).toast("Enter phone number")
             } else if (checkEmpty(regDocYearsOfExp)) {
                 ClassAlertDialog(thisContext).toast("Enter doctor's years of experience")
             } else if (specialityId == "") {
-                ClassAlertDialog(thisContext).toast("Select your gender...")
+                ClassAlertDialog(thisContext).toast("Select doctor's speciality...")
             } else if (regDocPassword.length < 4) {
                 ClassAlertDialog(thisContext).toast("Password too short...")
             } else {
@@ -260,19 +260,20 @@ class ActivityDoctorMgt: AppCompatActivity(), DocsAdapter2.DocsAdapterCallbackIn
     }
 
     private fun docSpecialitySpinnerInitialize(regDocSpecialitySpinner:Spinner) {
-        val docList = ClassUtilities().getDoctors(thisContext).distinctBy { it.speciality_id }
 
         val docSpecialityNameArray = arrayListOf<String>()
         val docSpecialityIdArray = arrayListOf<String>()
 
         docSpecialityNameArray.add("Select Speciality...")
         docSpecialityIdArray.add("")
-        for (element in docList) {
-            if(element.speciality!!.isEmpty())continue
-
-            docSpecialityNameArray.add(element.speciality)
-            docSpecialityIdArray.add(element.speciality_id!!)
-        }
+        docSpecialityNameArray.add("Dentist")
+        docSpecialityIdArray.add("1")
+        docSpecialityNameArray.add("Surgeon")
+        docSpecialityIdArray.add("2")
+        docSpecialityNameArray.add("Neurosurgeon")
+        docSpecialityIdArray.add("3")
+        docSpecialityNameArray.add("Neurologist")
+        docSpecialityIdArray.add("4")
         val spinnerArrayAdapter = ArrayAdapter<String>(thisContext, android.R.layout.simple_spinner_dropdown_item, docSpecialityNameArray)
         //selected item will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

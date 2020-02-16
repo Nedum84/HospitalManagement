@@ -4,12 +4,12 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.os.Handler
+import android.view.*
 import androidx.core.view.GravityCompat
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.AuthFailureError
@@ -33,6 +33,7 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     lateinit var prefs: ClassSharedPreferences
     lateinit var thisContext: Activity
+    lateinit var curUserDetail:UserClassBinder
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +43,37 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         thisContext = this
         prefs = ClassSharedPreferences(thisContext)
 
-        clickEvents()
+
+        val navigationView = findViewById<View>(R.id.nav_view) as NavigationView
+        navigationView.setNavigationItemSelectedListener(this)
+        val header = navigationView.getHeaderView(0)
+        val navUserName = header.findViewById(R.id.nav_user_name) as TextView
+        val navUserEmail = header.findViewById(R.id.nav_user_email) as TextView
+        val navImageView = header.findViewById(R.id.nav_image_view) as ImageView
+
+        if (!prefs.isLoggedIn()){
+            navUserName.text = getString(R.string.app_name)
+            navUserEmail.text = getString(R.string.nav_header_subtitle)
+
+        }else{
+            val stDetails = ClassSharedPreferences(thisContext).getUserJSONDetails()
+            try {
+                curUserDetail = Gson().fromJson(stDetails, Array<UserClassBinder>::class.java).asList()[0]
+
+                navUserName.text = "${curUserDetail.name?.toUpperCase()}"
+                navUserEmail.text = curUserDetail.phone?.toUpperCase()
+            } catch (e: Exception) {
+            }
+        }
+        nav_view.setCheckedItem(R.id.nav_home)//For nav view indicator
+
 
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
+
+        clickEvents()
     }
 
     private fun clickEvents() {
@@ -89,7 +115,6 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         }.setNegativeButton("Cancel"
                         ) { _, _ ->}
                         .show()
-
             }else{
                 addAppDialogShow()
             }
@@ -120,8 +145,71 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         }.setNegativeButton("Cancel"
                         ) { _, _ -> }
                         .show()
+            }else{
+                myOrderHistoryDialogShow()
             }
         }
+
+        check_my_med_report.setOnClickListener {
+            if (!prefs.isLoggedIn()) {
+                AlertDialog.Builder(this)
+                        .setMessage("Login to view your medical report")
+                        .setPositiveButton("Login"
+                        ) { _, _ ->
+                            logRegDialogShow()
+
+                        }.setNegativeButton("Cancel"
+                        ) { _, _ -> }
+                        .show()
+            }else{
+                ClassAlertDialog(thisContext).alertMessage("${curUserDetail.pat_med_report}","Symptoms")
+            }
+        }
+
+
+        //click image 5 times to login to admin panel...
+        hLogo.setOnTouchListener(object : View.OnTouchListener {
+            var handler = Handler()
+
+            var numberOfTaps = 0
+            var lastTapTimeMs: Long = 0
+            var touchDownMs: Long = 0
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> touchDownMs = System.currentTimeMillis()
+                    MotionEvent.ACTION_UP -> {
+                        handler.removeCallbacksAndMessages(null)
+
+                        if (System.currentTimeMillis() - touchDownMs > ViewConfiguration.getTapTimeout()) {
+                            //it was not a tap
+                            numberOfTaps = 0
+                            lastTapTimeMs = 0
+                        }
+
+                        if (numberOfTaps > 0 && System.currentTimeMillis() - lastTapTimeMs < ViewConfiguration.getDoubleTapTimeout()) {
+                            numberOfTaps += 1
+                        } else {
+                            numberOfTaps = 1
+                        }
+
+                        lastTapTimeMs = System.currentTimeMillis()
+
+                        if (numberOfTaps == 5) {
+                            if (prefs.getUserLevel() == "4"&&prefs.isLoggedIn()){
+                                startActivity(Intent(thisContext, ActivityDoctorMgt::class.java), Bundle())
+                            }else{
+                                ClassAlertDialog(thisContext).toast("Unauthorized request")
+                            }
+                        }
+                        v.performClick()
+                    }
+                }
+
+                return true
+            }
+        })
     }
 
     override fun onBackPressed() {
@@ -172,7 +260,8 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             R.id.action_about_us->{
-                aboutUsDialog()
+                ClassAlertDialog(thisContext).alertMessage(ClassSharedPreferences(thisContext).getAllUsersJSONDetails()!!)
+//                aboutUsDialog()
             }
             R.id.menu_login_pat->{
                 loginChooser("1")
@@ -186,12 +275,18 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.menu_login_admin->{
                 loginChooser("4")
             }
+            R.id.action_update_details->{
+                if(!prefs.isLoggedIn()){
+                    ClassAlertDialog(thisContext).toast("You are not logged IN...")
+                }else{
+                    updateUserDetails()
+                }
+            }
             else -> return super.onOptionsItemSelected(item)
         }
 
         return super.onOptionsItemSelected(item)
     }
-
     private fun loginChooser(access_level:String) {
         if(prefs.isLoggedIn()){
             ClassAlertDialog(thisContext).toast("Already Logged IN")
@@ -278,6 +373,53 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun updateUserDetails() {
+
+        //creating volley string request
+        val dialog = ClassProgressDialog(thisContext)
+        dialog.createDialog()
+        val stringRequest = object : StringRequest(Request.Method.POST, UrlHolder.URL_LOGIN_REGISTER,
+                Response.Listener<String> { response ->
+                    dialog.dismissDialog()
+
+                    try {
+
+                        val obj = JSONObject(response)
+                        val regStatus = obj.getString("log_status");
+                        if (regStatus == "ok") {
+                            ClassAlertDialog(thisContext).toast("Details Updated...")
+
+                            val userDetails = obj.getJSONArray("userDetails").getJSONObject(0)
+                            val allUserDetails = obj.getJSONArray("all_usersz_details")
+                            saveUserDetails(userDetails)
+                            saveAllUsersDetails(allUserDetails)
+                        } else {
+                            ClassAlertDialog(thisContext).toast(regStatus)
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                },
+                Response.ErrorListener { volleyError ->
+                    dialog.dismissDialog()
+                    ClassAlertDialog(thisContext).toast("ERROR IN NETWORK CONNECTION!")
+                }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["request_type"] = "update_details"
+                params["user_id"] = prefs.getUserId()!!
+                return params
+            }
+        }
+
+        //adding request to queue
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+        //volley interactions end
+    }
+
+
+
     private fun aboutUsDialog() {
         ClassAlertDialog(thisContext).alertMessage("ADSU Hospital and Management system where you can order for drugs, book appointment and view our doctors profile....." +
                 "\n\nDeveloped by Android/Web enthusiast. We develop robust, dynamic & responsible applications ","About Us")
@@ -292,7 +434,7 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_my_profile -> {
                 if(!prefs.isLoggedIn()){
                     AlertDialog.Builder(this)
-                            .setMessage("Login is required before you check our doctors")
+                            .setMessage("Login is required before you view our doctors")
                             .setPositiveButton("Login"
                             ) { _, _ ->
                                 logRegDialogShow()
@@ -311,6 +453,7 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 ClassShareApp(thisContext).shareApp()
             }
             R.id.nav_about_us->{
+//                ClassAlertDialog(thisContext).alertMessage(prefs.getAllUsersJSONDetails()!!)
                 aboutUsDialog()
             }
         }
@@ -342,7 +485,8 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val curDrugOrders = (Gson().fromJson(prefs.getOrderDetails(), Array<DrugClassBinder>::class.java).asList())
         if (curDrugOrders.isNotEmpty()){
             startActivity(Intent(this, ActivityMyOrders::class.java))
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+//            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
 
     }
@@ -423,6 +567,27 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
+    //my order history frag dialog class
+    private val dialogFragmentMyOrderHistory = FragmentDialogMyOrderHistory()
+    private fun myOrderHistoryDialogShow(){
+        if(dialogFragmentMyOrderHistory.isAdded)return
+
+        val ft = supportFragmentManager.beginTransaction()
+        val prev = supportFragmentManager.findFragmentByTag(FragmentDialogMyOrderHistory::class.java.name)
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+        dialogFragmentMyOrderHistory.show(ft, FragmentDialogMyOrderHistory::class.java.name)
+    }
+
+
+
+
+
+
+
+
 
     private fun saveAllUsersDetails(allUserDetails: JSONArray?) {
         val preference = ClassSharedPreferences(thisContext)
@@ -451,7 +616,7 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 )
                 qDataArray.add(eachData)
             }
-            preference.setAllUsersJSONDetails(Gson().toJson(mutableListOf(qDataArray)))
+            preference.setAllUsersJSONDetails(Gson().toJson(qDataArray))
         }
     }
 
@@ -474,7 +639,7 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 userDetails?.getString("reg_date"),
                 userDetails?.getString("photo_url")
         )
-        preference.setUserJSONDetails(Gson().toJson(mutableListOf(userDetailsArr)))
+        preference.setUserJSONDetails(Gson().toJson(userDetailsArr))
         preference.setUserId(userDetailsArr.user_id)
         preference.setUserLevel(userDetailsArr.user_level)
     }

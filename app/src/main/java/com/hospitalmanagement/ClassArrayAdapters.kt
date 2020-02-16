@@ -25,17 +25,7 @@ import org.json.JSONObject
 
 
 class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): RecyclerView.Adapter<AppsAdapter.ViewHolder>(){
-//    private var adapterCallbackInterface: AppAdapterCallbackInterface? = null
-//
-//
-//    init {
-//        try {
-//            adapterCallbackInterface = context as AppAdapterCallbackInterface
-//        } catch (e: ClassCastException) {
-//            throw RuntimeException(context.toString() + "Activity must implement AppAdapterCallbackInterface.", e)
-//        }
-//    }
-
+    private val prefs = ClassSharedPreferences(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(
@@ -67,7 +57,7 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
         val listDetails = list[position]
 
         holder.appPatName.text = "Patient Name: ${listDetails.pat_name}"
-        holder.appDate.text     = ClassDateAndTime().getDateTime(listDetails.app_date!!.toLong())
+        holder.appDate.text     = "Date: ${ClassDateAndTime().getDateTime(listDetails.app_date!!.toLong())}"
         holder.appDocName.text     = "With ${listDetails.doc_name}"
         holder.appCancelBtn.visibility = View.GONE
         holder.appCancelledBtn.visibility = View.GONE
@@ -83,7 +73,7 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
             holder.appViewPrescriptionBtn.visibility = View.VISIBLE
             holder.appDoneBtn.visibility = View.VISIBLE
         }
-        if(ClassSharedPreferences(context).getUserLevel()=="2"&&listDetails.app_status=="0"){//visible to doctors only
+        if((prefs.getUserLevel()=="2")&&(listDetails.app_status=="0")){//visible to doctors only
             holder.appPrescribeBtn.visibility = View.VISIBLE
         }
 
@@ -93,7 +83,14 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
 
 
         holder.appCancelBtn.setOnClickListener {
-            cancelApp(listDetails)
+            AlertDialog.Builder(context)
+                    .setMessage("Cancel this appointment?")
+                    .setPositiveButton("Yes"
+                    ) { _, _ ->
+                        cancelApp(listDetails)
+                    }.setNegativeButton("Close"
+                    ) { _, _ -> }
+                    .show()
         }
         holder.appSymptomsBtn.setOnClickListener {
             ClassAlertDialog(context).alertMessage("${listDetails.pat_symptoms}","Symptoms")
@@ -119,7 +116,13 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
 
 
     }
-    private fun getDrugs(appsList: AppClassBinder){
+
+    private fun getDrugs(appsList: AppClassBinder) {
+        val allDrugs = ClassUtilities().getAllDrugs()
+        showDrugsAlertDialog(appsList, allDrugs)
+    }
+
+    private fun getDrugs2(appsList: AppClassBinder){
         //creating volley string request
         val pDialog = ClassProgressDialog(context)
         pDialog.createDialog()
@@ -683,8 +686,8 @@ class DocsAdapter2(val list:MutableList<UserClassBinder>, val context: Context):
 
         holder.doc2RemDocBtn.setOnClickListener {
             AlertDialog.Builder(context)
-                    .setMessage("Login to view your Order History")
-                    .setPositiveButton("Login"
+                    .setMessage("Remove this Doctor?")
+                    .setPositiveButton("Remove"
                     ) { _, _ ->
                         adapterCallbackInterface?.onRemoveDoc(listDetails)
 

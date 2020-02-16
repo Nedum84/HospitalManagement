@@ -45,7 +45,6 @@ class FragmentDialogSearchDrugs: DialogFragment() {
 
         closeDialogFrag.setOnClickListener {
             dialog!!.dismiss()
-            listener!!.onCloseSearchDrugDialog()
         }
 
 
@@ -86,7 +85,7 @@ class FragmentDialogSearchDrugs: DialogFragment() {
         })
     }
 
-    private fun loadSearchedDrug(search_query:String) {
+    private fun loadSearchedDrug2(search_query:String) {
         //creating volley string request
         no_question_search_tag?.visibility = View.VISIBLE
         no_question_search_tag.text = "Searching..."
@@ -152,7 +151,7 @@ class FragmentDialogSearchDrugs: DialogFragment() {
         //volley interactions end
     }
 
-    private fun loadSearchedDrug2(search_query:String) {
+    private fun loadSearchedDrug(search_query:String) {
         no_question_search_tag?.visibility = View.VISIBLE
         no_question_search_tag.text = "Searching..."
         refreshAdapter()
@@ -241,10 +240,10 @@ class FragmentDialogSearchDrugs: DialogFragment() {
         listener!!.onCloseSearchDrugDialog()
     }
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        listener!!.onCloseSearchDrugDialog()
-    }
+//    override fun onCancel(dialog: DialogInterface) {
+//        super.onCancel(dialog)
+//        listener!!.onCloseSearchDrugDialog()
+//    }
     //Fragment communication with the Home Activity Stops
 }
 

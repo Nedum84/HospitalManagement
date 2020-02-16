@@ -27,7 +27,7 @@ class ClassDateAndTime {
 
     fun getDateTime(s: Long = System.currentTimeMillis()): String {//current time in millisec
         try {
-            val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())//2:23 pm |h->5:23am, hh->05:40pm
+            val sdf = SimpleDateFormat("hh:mm a  EEE. MMM dd, yyyy", Locale.getDefault())//2:23 pm |h->5:23am, hh->05:40pm
             val netDate = java.util.Date(s)
             return sdf.format(netDate)
         } catch (e: Exception) {

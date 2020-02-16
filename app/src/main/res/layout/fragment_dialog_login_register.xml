@@ -24,7 +24,7 @@
             android:textAllCaps="true"
             android:textSize="18sp"
             android:layout_weight="1"
-            android:textColor="@color/colorDarkBlue"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_height="wrap_content"
             android:text="Patient Login"
             android:textStyle="bold"
@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content"
                         style="@style/editTextStRegister"
                         android:hint="Address"
-                        android:minLines="2"
+                        android:maxLines="4"
                         android:layout_gravity="top"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout

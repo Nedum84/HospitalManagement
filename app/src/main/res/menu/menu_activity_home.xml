@@ -57,4 +57,9 @@
         android:orderInCategory="100"
         android:title="About"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_update_details"
+        android:orderInCategory="100"
+        android:title="Update Details"
+        app:showAsAction="never" />
 </menu>

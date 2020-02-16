@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.fragment_dialog_view_doctors.*
 
 
 class FragmentDialogViewDoctors: DialogFragment() {
-    var listener: FragmentDialogMyAppsInteractionListener? = null
     lateinit var thisContext: Activity
 
     private var docList = mutableListOf<UserClassBinder>()
@@ -96,25 +95,6 @@ class FragmentDialogViewDoctors: DialogFragment() {
         return dialog
     }
 
-
-    //Fragment communication with the Home Activity Starts
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentDialogMyAppsInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    interface FragmentDialogMyAppsInteractionListener {
-        fun onAddAppointment()
-    }
     //Fragment communication with the Home Activity Stops
 }
 

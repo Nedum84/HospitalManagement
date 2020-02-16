@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/design_with_shadow"
-    android:layout_margin="12dp"
+    android:layout_margin="4dp"
     android:id="@+id/docWrapper"
     android:padding="8dp">
 

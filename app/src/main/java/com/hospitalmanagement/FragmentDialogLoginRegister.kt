@@ -254,7 +254,7 @@ class FragmentDialogLoginRegister: DialogFragment(){
                 )
                 qDataArray.add(eachData)
             }
-            preference.setAllUsersJSONDetails(Gson().toJson(mutableListOf(qDataArray)))
+            preference.setAllUsersJSONDetails(Gson().toJson(qDataArray))
         }
     }
 
@@ -277,7 +277,7 @@ class FragmentDialogLoginRegister: DialogFragment(){
                 userDetails?.getString("reg_date"),
                 userDetails?.getString("photo_url")
         )
-        preference.setUserJSONDetails(Gson().toJson(mutableListOf(userDetailsArr)))
+        preference.setUserJSONDetails(Gson().toJson(userDetailsArr))
         preference.setUserId(userDetailsArr.user_id)
         preference.setUserLevel(userDetailsArr.user_level)
 

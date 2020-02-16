@@ -39,7 +39,7 @@ class  ClassSharedPreferences(val context: Context?){
         editor.putString(PREFERENCE_USER_JSON_DETAILS,data)
         editor.apply()
     }
-    private fun getUserJSONDetails():String?{
+    fun getUserJSONDetails():String?{
         return  preference.getString(PREFERENCE_USER_JSON_DETAILS, "")//Gson().toJson(mutableListOf<UserClassBinder>())
     }
     //set all the users details arrays in JSON

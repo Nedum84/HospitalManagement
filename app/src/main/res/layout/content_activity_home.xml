@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:padding="6dp">
         <ImageView
+            android:id="@+id/hLogo"
             android:layout_width="80dp"
             android:layout_height="80dp"
             app:srcCompat="@drawable/adsu_logo1"

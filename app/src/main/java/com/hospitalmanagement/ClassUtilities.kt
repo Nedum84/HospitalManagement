@@ -46,15 +46,15 @@ class ClassUtilities() {
         } catch (e: Exception) {}
     }
 
-    fun getDoctors(context: Context?,speality_id:String=""):MutableList<UserClassBinder>{
-        val allUsers = (Gson().fromJson(ClassSharedPreferences(context).getAllUsersJSONDetails(), Array<UserClassBinder>::class.java).asList()).toMutableList()
+    fun getDoctors(context: Context?, speciality_id:String=""):MutableList<UserClassBinder>{
+        val allUsers = (Gson().fromJson(ClassSharedPreferences(context).getAllUsersJSONDetails(), Array<UserClassBinder>::class.java).asList())
         val selUsers = mutableListOf<UserClassBinder>()
         for (u in allUsers){
-            if (u.user_level !="3")
+            if (u.user_level !="2")
                 continue
 
-            if (speality_id.isNotEmpty()){
-                if (u.speciality_id !=speality_id)
+            if (speciality_id.isNotEmpty()){
+                if (u.speciality_id !=speciality_id)
                     continue
             }
 
