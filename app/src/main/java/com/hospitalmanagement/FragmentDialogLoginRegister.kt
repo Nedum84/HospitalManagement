@@ -277,7 +277,7 @@ class FragmentDialogLoginRegister: DialogFragment(){
                 userDetails?.getString("reg_date"),
                 userDetails?.getString("photo_url")
         )
-        preference.setUserJSONDetails(Gson().toJson(userDetailsArr))
+        preference.setUserJSONDetails(Gson().toJson(mutableListOf(userDetailsArr)))
         preference.setUserId(userDetailsArr.user_id)
         preference.setUserLevel(userDetailsArr.user_level)
 

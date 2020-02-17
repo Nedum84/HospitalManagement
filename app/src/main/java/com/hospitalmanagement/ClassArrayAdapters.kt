@@ -283,6 +283,7 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
 
                         if (responseMsg=="ok") {
                             appsList.app_status = "2"
+                            appsList.doc_prescription = Gson().toJson(selDrugIds)
 
                             notifyDataSetChanged()
                         }else{
@@ -302,7 +303,7 @@ class AppsAdapter(val list:MutableList<AppClassBinder>, val context: Context): R
                 val params = java.util.HashMap<String, String?>()
                 params["request_type"] = "add_prescription"
                 params["app_id"] = appsList.app_id.toString()
-                params["doc_prescription"] = Gson().toJson(mutableListOf(selDrugIds))
+                params["doc_prescription"] = Gson().toJson(selDrugIds)
                 return params
             }
         }
@@ -530,7 +531,7 @@ class DrugsAdapter(val list:MutableList<DrugClassBinder>, val context: Context):
 
 
         val curDrugOrders = (Gson().fromJson(ClassSharedPreferences(context).getOrderDetails(), Array<DrugClassBinder>::class.java).asList()).toMutableList()
-        if (listDetails in curDrugOrders){
+        if (listDetails.drug_id in curDrugOrders.map{it.drug_id}){//check if the id is already added...
             holder.drugAddToCartBtn.visibility =View.GONE
             holder.drugRemoveFromCartBtn.visibility =View.VISIBLE
         }else{
@@ -552,7 +553,7 @@ class DrugsAdapter(val list:MutableList<DrugClassBinder>, val context: Context):
             if (listDetails !in curDrugOrders){
                 curDrugOrders.add(listDetails)
             }
-            ClassSharedPreferences(context).setOrderDetails(Gson().toJson(curDrugOrders))
+            ClassSharedPreferences(context).setOrderDetails(Gson().toJson(curDrugOrders.distinctBy { it.drug_id }.toMutableList()))
 
             //Updating...
             notifyDataSetChanged()
@@ -615,7 +616,7 @@ class MyOrdersHistoryAdapter(val list:MutableList<MyOrderHistoryClassBinder>, va
 
         holder.orderHistoryWrapper.setOnClickListener {
 
-            val dOrders = drugOrders.map { it.drug_name +" - ${it.drug_qty}(₦${it.drug_price})"}.toTypedArray()
+            val dOrders = drugOrders.map { it.drug_name +" - ${it.drug_qty}(₦${it.drug_price.toInt()* it.drug_qty})"}.toTypedArray()
 
             val builder = AlertDialog.Builder(context)
             builder.setTitle("#${listDetails.order_no} Details")
@@ -680,7 +681,7 @@ class DocsAdapter2(val list:MutableList<UserClassBinder>, val context: Context):
 
         holder.doc2Name.text = "${listDetails.name}"
         holder.doc2AreaOfSpeciality.text     = "Speciality: ${listDetails.speciality}"
-        holder.doc2YrOfExp.text     = "Speciality: ${listDetails.age}"
+        holder.doc2YrOfExp.text     = "Years of experience: ${listDetails.age}"
         LoadImg(context,holder.doc2Photo).execute(listDetails.photo_url)
 
 

@@ -15,7 +15,7 @@
         android:layout_width="130dp"
         android:layout_height="160dp"
         android:padding="3dp"
-        app:srcCompat="@drawable/user"
+        app:srcCompat="@drawable/avater"
         tools:ignore="ContentDescription"/>
     <LinearLayout
         android:layout_width="wrap_content"

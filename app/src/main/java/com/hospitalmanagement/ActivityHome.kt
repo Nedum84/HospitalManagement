@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.*
 import androidx.core.view.GravityCompat
 import android.widget.EditText
@@ -56,13 +57,20 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             navUserEmail.text = getString(R.string.nav_header_subtitle)
 
         }else{
-            val stDetails = ClassSharedPreferences(thisContext).getUserJSONDetails()
+            val uDetails = ClassSharedPreferences(thisContext).getUserJSONDetails()
             try {
-                curUserDetail = Gson().fromJson(stDetails, Array<UserClassBinder>::class.java).asList()[0]
+                curUserDetail = Gson().fromJson(uDetails, Array<UserClassBinder>::class.java).asList()[0]
 
                 navUserName.text = "${curUserDetail.name?.toUpperCase()}"
                 navUserEmail.text = curUserDetail.phone?.toUpperCase()
+
+                if(prefs.getUserLevel()=="2"||prefs.getUserLevel()=="3"){
+                    view_doctors.visibility = View.GONE
+                    make_appointment.visibility = View.GONE
+                    check_my_med_report.visibility = View.GONE
+                }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
         nav_view.setCheckedItem(R.id.nav_home)//For nav view indicator
@@ -74,6 +82,11 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         clickEvents()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        nav_view.setCheckedItem(R.id.nav_home)//For nav view indicator
     }
 
     private fun clickEvents() {
@@ -260,8 +273,8 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             R.id.action_about_us->{
-                ClassAlertDialog(thisContext).alertMessage(ClassSharedPreferences(thisContext).getAllUsersJSONDetails()!!)
-//                aboutUsDialog()
+//                ClassAlertDialog(thisContext).alertMessage(ClassSharedPreferences(thisContext).getAllUsersJSONDetails()!!)
+                aboutUsDialog()
             }
             R.id.menu_login_pat->{
                 loginChooser("1")
@@ -434,7 +447,7 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_my_profile -> {
                 if(!prefs.isLoggedIn()){
                     AlertDialog.Builder(this)
-                            .setMessage("Login is required before you view our doctors")
+                            .setMessage("Login is required before accessing the profile page")
                             .setPositiveButton("Login"
                             ) { _, _ ->
                                 logRegDialogShow()
@@ -464,11 +477,15 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     //from my appointment fragment dialog class
     override fun onAddAppointment() {
-        addAppDialogShow()
+        Handler(Looper.getMainLooper()).postDelayed({
+            addAppDialogShow()
+        }, 500)
     }
     //from my order history dialog fragment
     override fun onAddOrders() {
-        searchDrugDialogShow()
+        Handler(Looper.getMainLooper()).postDelayed({
+            searchDrugDialogShow()
+        }, 500)
     }
     //from docs adapter class
     override fun onMakeApp() {
@@ -639,7 +656,7 @@ class ActivityHome : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 userDetails?.getString("reg_date"),
                 userDetails?.getString("photo_url")
         )
-        preference.setUserJSONDetails(Gson().toJson(userDetailsArr))
+        preference.setUserJSONDetails(Gson().toJson(mutableListOf(userDetailsArr)))
         preference.setUserId(userDetailsArr.user_id)
         preference.setUserLevel(userDetailsArr.user_level)
     }

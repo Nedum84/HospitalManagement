@@ -108,9 +108,9 @@ class FragmentDialogViewApps: DialogFragment() {
                                 ADAPTER.addItems(qDataArray)
 
                             }else{
-                                ClassAlertDialog(thisContext).toast("No data found...")
+//                                ClassAlertDialog(thisContext).toast("No data found...")
                                 no_data_tag?.visibility = View.VISIBLE
-                                if (ClassSharedPreferences(thisContext).getUserLevel()=="1"){
+                                if (ClassSharedPreferences(thisContext).getUserLevel()=="1"||ClassSharedPreferences(thisContext).getUserLevel()=="4"){
                                     addAppointmentBtn.visibility = View.VISIBLE
                                 }else{
                                     addAppointmentBtn.visibility = View.GONE

@@ -1,17 +1,10 @@
 package com.hospitalmanagement
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.AsyncTask
-import android.util.Log
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import java.io.*
-import java.net.HttpURLConnection
-import java.net.MalformedURLException
-import java.net.URL
 import android.app.Activity
 import java.lang.ref.WeakReference
 import android.app.Application
@@ -41,7 +34,7 @@ class LoadImg (context: Context, imageView: ImageView): AsyncTask<String, Void, 
                     .load(imgUrl)
                     .apply(RequestOptions()
 //                            .placeholder(R.drawable.ic_tune_black_24dp)//default image on loading
-                            .error(R.drawable.user)//without n/w, this img shows
+                            .error(R.drawable.avater)//without n/w, this img shows
                             .dontAnimate()
                             .fitCenter()
                     )

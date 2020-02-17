@@ -1,13 +1,10 @@
 package com.hospitalmanagement
 
-import android.content.Context
-import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
 
 
 object  UrlHolder{
-        private const val URL_ROOT = "http://192.168.44.236/adsu/hospital-managent/server_request/"
-//    private const val URL_ROOT = "http://unnelection.com.ng/adsu/hospital-managent/server_request/"
+//        private const val URL_ROOT = "http://192.168.44.236/adsu/hospital-managent/server_request/"
+    private const val URL_ROOT = "http://unnelection.com.ng/adsu/hospital-managent/server_request/"
 
 
 

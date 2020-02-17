@@ -36,7 +36,7 @@ class ClassDateAndTime {
     }
     fun getDateTime2(s: Long): String? {
         try {
-            val sdf = java.text.SimpleDateFormat("EEE. MMM dd, yyyy", Locale.getDefault())//Wed, Mar 21, 2019
+            val sdf = java.text.SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())//Wed, Mar 21, 2019
             val netDate = java.util.Date(s*1000)
             return sdf.format(netDate)
         } catch (e: Exception) {

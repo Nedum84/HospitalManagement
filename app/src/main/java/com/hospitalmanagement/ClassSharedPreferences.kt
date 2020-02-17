@@ -33,7 +33,7 @@ class  ClassSharedPreferences(val context: Context?){
 
     //USER DETAILS
 
-    //set user details arrays in JSON
+    //set avater details arrays in JSON
     fun setUserJSONDetails(data:String){
         val editor = preference.edit()
         editor.putString(PREFERENCE_USER_JSON_DETAILS,data)
